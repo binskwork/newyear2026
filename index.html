@@ -37,8 +37,8 @@
             <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-2 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs">
             <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-2 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs">
         </div>
-        <textarea id="message" rows="2" placeholder="새해 덕담을 남겨주세요✨" class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none"></textarea>
-
+        <textarea id="message" rows="2" placeholder="새해 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none"></textarea>
+        
         <div class="bg-amber-50/50 p-3 rounded-2xl border border-amber-100 mb-3 text-gray-800">
             <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 참여 정보 (전부 필수 입력)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
@@ -58,7 +58,7 @@
     </div>
 
     <div id="greeting-list" class="card-grid"></div>
-
+    
     <div class="text-center py-10">
         <button onclick="downloadCSV()" class="text-[9px] text-gray-300 hover:text-amber-600 underline">Admin Data Export</button>
     </div>
@@ -174,4 +174,11 @@
                 const v = d.data();
                 csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
             });
-            const blob = new Blob([csv], {type: "text/csv;charset=
+            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; a.download = "event_data.csv"; a.click();
+        };
+    </script>
+</body>
+</html>
