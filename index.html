@@ -10,57 +10,74 @@
         body { font-family: "Pretendard", sans-serif; overflow-x: hidden; min-height: 100vh; transition: background 1s ease; }
         .day-theme { background: radial-gradient(circle at top, #fff5f5 0%, #fffaf0 100%); color: #2d3436; }
         .night-theme { background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%); color: #f8f9fa; }
+
+        /* ✨ 별무리 효과 (수정됨) */
         .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
-        .gold-container { border: 2px solid #d4af37; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.12); position: relative; z-index: 20; }
-        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .like-animation { animation: heartBeat 0.4s ease-in-out; }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding: 20px; align-items: start; position: relative; z-index: 10; }
-        .card { transition: all 0.3s ease; background: white; border-top: 4px solid #c0392b; border-radius: 16px; color: #333; }
-        .night-theme .card { background: rgba(255, 255, 255, 0.9); }
+
+        /* 입력창 금색 테두리 및 입체 이모지 */
+        .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
+        .deco-emoji { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); z-index: 30; pointer-events: none; transition: transform 0.3s ease; }
+        
+        /* ❤️ 좋아요 클릭 시 카드 흔들림 애니메이션 */
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .like-animation { animation: heartBeat 0.5s ease-in-out; }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px; align-items: start; position: relative; z-index: 10; }
+        .card { transition: all 0.3s ease; background: white; border-top: 5px solid #c0392b; border-radius: 20px; color: #333; }
+        .night-theme .card { background: rgba(255, 255, 255, 0.95); }
     </style>
 </head>
 <body class="day-theme">
+
     <div id="star-container"></div>
-    <header class="text-center pt-8 pb-4 relative z-10">
-        <h1 class="text-xl md:text-2xl font-extrabold text-[#c0392b] mb-1 flex justify-center items-center gap-2" id="main-title">
+
+    <header class="text-center pt-8 pb-3 relative z-10">
+        <h1 class="text-xl md:text-3xl font-extrabold text-[#c0392b] mb-1 flex justify-center items-center gap-2" id="main-title">
             <span>🏮</span> 2026 새해 덕담 등불 띄우기 <span>🏮</span>
         </h1>
-        <p class="text-sm text-[#d4af37] font-medium">서로의 앞날을 비추는 따뜻한 덕담 한마디</p>
-        <button onclick="shareLink()" class="mt-2 px-4 py-1 bg-white/70 border border-[#d4af37] text-[#c0392b] rounded-full text-[10px] font-bold shadow-sm">🔗 링크 복사</button>
+        <p class="text-xs md:text-sm text-[#d4af37] font-semibold">서로의 앞날을 비추는 따뜻한 덕담 한마디</p>
+        <button onclick="shareLink()" id="share-btn" class="mt-2 px-4 py-1.5 bg-white/70 border border-[#d4af37] text-[#c0392b] rounded-full text-[10px] font-bold shadow-sm hover:bg-[#d4af37] hover:text-white transition-all">🔗 이벤트 링크 복사하기</button>
     </header>
 
-    <div class="max-w-md mx-auto gold-container bg-white/95 p-5 rounded-[30px] mb-8 mx-4">
-        <div class="absolute -top-5 -left-5 text-4xl">🧧</div>
-        <div class="absolute -bottom-5 -right-5 text-4xl">✨</div>
+    <div class="max-w-md mx-auto gold-container bg-white/95 p-5 rounded-[32px] mb-8 mx-4 relative">
+        <div class="deco-emoji absolute -top-7 -left-7 text-5xl">🧧</div>
+        <div class="deco-emoji absolute -bottom-7 -right-7 text-5xl">✨</div>
+
         <div class="flex gap-2 mb-2">
-            <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-2 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs">
-            <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-2 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs">
+            <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-2.5 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+            <input type="password" id="password" placeholder="비밀번호(삭제용)" class="w-1/2 p-2.5 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
         </div>
-        <textarea id="message" rows="2" placeholder="새해 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none"></textarea>
+        <textarea id="message" rows="2" placeholder="새해의 소망을 담은 등불 메시지를 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
         
-        <div class="bg-amber-50/50 p-3 rounded-2xl border border-amber-100 mb-3 text-gray-800">
-            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 참여 정보 (전부 필수 입력)</p>
+        <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4">
+            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (관리자만 확인)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <input type="text" id="region" placeholder="지역" class="p-1.5 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="school" placeholder="소속교" class="p-1.5 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="realName" placeholder="실명" class="p-1.5 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="phone" placeholder="연락처" class="p-1.5 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="region" placeholder="지역(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="school" placeholder="소속교(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="realName" placeholder="실명(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="phone" placeholder="연락처(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
             </div>
-            <div class="text-[9px] text-gray-400 bg-white/50 p-2 rounded-lg border leading-tight mb-2">
-                <strong>개인정보 동의</strong>: 수집처(아이스크림아트), 목적(경품 전달), 항목(이름/번호/지역/학교), 보유(목적 달성 후 즉시 파기)
+            <div class="text-[9px] text-gray-500 bg-white/50 p-2.5 rounded-lg border leading-tight mb-3">
+                <strong>개인정보 수집 및 이용 동의</strong><br>
+                ▶수집: 아이스크림아트 / ▶목적: 당첨 안내 및 경품 전달<br>
+                ▶항목: 이름, 연락처, 지역, 소속교 / ▶기간: 목적 달성 후 즉시 파기
             </div>
-            <label class="flex items-center text-[10px] text-gray-600 cursor-pointer font-bold">
-                <input type="checkbox" id="agree" class="mr-1.5 w-3.5 h-3.5 accent-[#c0392b]"> 위 내용에 모두 동의합니다.
+            <label class="flex items-center text-[11px] text-gray-700 cursor-pointer font-bold">
+                <input type="checkbox" id="agree" class="mr-2 w-4 h-4 accent-[#c0392b]"> 위 내용에 모두 동의합니다.
             </label>
         </div>
-        <button onclick="saveGreeting()" class="w-full bg-[#c0392b] text-white py-2.5 rounded-xl font-bold text-base shadow-md active:scale-95">덕담 등불 올리기 🏮</button>
+
+        <button onclick="saveGreeting()" class="w-full bg-[#c0392b] text-white py-3 rounded-2xl font-bold text-lg shadow-md active:scale-95 transition-all">덕담 등불 올리기 🏮</button>
     </div>
 
     <div id="greeting-list" class="card-grid"></div>
     
-    <div class="text-center py-10">
-        <button onclick="downloadCSV()" class="text-[9px] text-gray-300 hover:text-amber-600 underline">Admin Data Export</button>
+    <div class="text-center py-12">
+        <button onclick="downloadCSV()" class="text-[10px] text-gray-300 hover:text-amber-600 underline transition-colors">Admin Data Export (CSV)</button>
     </div>
 
     <script type="module">
@@ -81,22 +98,24 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
+        // ✨ 1. 별무리 생성
         function createStars() {
             const container = document.getElementById('star-container');
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 45; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 const size = Math.random() * 2 + 1 + 'px';
                 star.style.width = size; star.style.height = size;
                 star.style.left = Math.random() * 100 + 'vw';
                 star.style.top = Math.random() * -100 + 'vh';
-                star.style.animationDuration = Math.random() * 8 + 7 + 's';
+                star.style.animationDuration = Math.random() * 8 + 8 + 's';
                 star.style.animationDelay = Math.random() * 5 + 's';
                 container.appendChild(star);
             }
         }
         createStars();
 
+        // 테마 설정
         const updateTheme = () => {
             const hour = new Date().getHours();
             if (hour >= 18 || hour < 6) {
@@ -106,78 +125,123 @@
         };
         updateTheme();
 
+        // 2. 링크 복사 기능 (HTTPS 대응 수정)
         window.shareLink = () => {
-            navigator.clipboard.writeText(window.location.href).then(() => alert("링크 복사 완료!"));
+            const url = window.location.href;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => alert("이벤트 주소가 복사되었습니다! 🧧"));
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert("이벤트 주소가 복사되었습니다! 🧧");
+            }
         };
 
+        // 3. 모든 필수 항목 검증 및 저장
         window.saveGreeting = async () => {
+            const getVal = (id) => document.getElementById(id).value.trim();
             const data = {
-                nickname: document.getElementById('nickname').value.trim(),
-                message: document.getElementById('message').value.trim(),
-                password: document.getElementById('password').value.trim(),
-                region: document.getElementById('region').value.trim(),
-                school: document.getElementById('school').value.trim(),
-                realName: document.getElementById('realName').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                likes: 0, createdAt: new Date()
+                nickname: getVal('nickname'),
+                message: getVal('message'),
+                password: getVal('password'),
+                region: getVal('region'),
+                school: getVal('school'),
+                realName: getVal('realName'),
+                phone: getVal('phone'),
+                likes: 0,
+                createdAt: new Date()
             };
-            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) return alert("모든 항목을 입력해주세요!");
-            if(!document.getElementById('agree').checked) return alert("동의 체크가 필요합니다!");
+            const agree = document.getElementById('agree').checked;
 
-            await addDoc(colRef, data);
-            alert("등불을 띄웠습니다!");
-            location.reload();
+            // 팝업 검증 강화
+            if (!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) {
+                return alert("⚠️ 당첨자 정보를 포함한 모든 항목을 입력해야 등불을 띄울 수 있습니다!");
+            }
+            if (!agree) {
+                return alert("⚠️ 개인정보 수집 및 이용 동의에 체크해 주세요!");
+            }
+
+            try {
+                await addDoc(colRef, data);
+                alert("성공! 당신의 덕담 등불이 하늘로 올라갔습니다. ✨");
+                location.reload();
+            } catch (e) {
+                alert("등록에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+                console.error(e);
+            }
         };
 
+        // 4. 실시간 리스트 불러오기 (id값 부여로 애니메이션 준비)
         onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
             const listDiv = document.getElementById('greeting-list');
             listDiv.innerHTML = '';
             snapshot.forEach((docSnap) => {
                 const item = docSnap.data();
                 const id = docSnap.id;
-                const scale = Math.min(1 + (item.likes * 0.02), 1.2);
+                const scale = Math.min(1 + (item.likes * 0.02), 1.25);
+                
                 listDiv.innerHTML += `
-                    <div id="card-${id}" class="card p-4 shadow-md relative" style="transform: scale(${scale});">
-                        <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-2 right-3 text-gray-300 hover:text-red-500 font-bold">✕</button>
-                        <p class="text-[10px] text-[#c0392b] font-bold mb-1">@${item.nickname}</p>
-                        <p class="text-gray-700 text-sm leading-snug mb-3">${item.message}</p>
-                        <div class="flex justify-between items-center border-t pt-2">
-                            <button onclick="window.likePost('${id}')" class="text-red-500 font-bold text-[11px]">🏮 ${item.likes}</button>
-                            <span class="text-[9px] text-gray-300">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
+                    <div id="card-${id}" class="card p-5 shadow-lg relative" style="transform: scale(${scale});">
+                        <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold transition-colors">✕</button>
+                        <p class="text-[10px] text-[#c0392b] font-bold mb-1.5 uppercase tracking-wider">@${item.nickname}</p>
+                        <p class="text-gray-800 text-[14px] leading-relaxed mb-5 font-medium">${item.message}</p>
+                        <div class="flex justify-between items-center border-t pt-3">
+                            <button onclick="window.likePost('${id}')" class="text-red-500 font-bold text-xs hover:scale-110 transition-transform active:scale-90">
+                                🏮 <span id="like-count-${id}">${item.likes}</span>
+                            </button>
+                            <span class="text-[9px] text-gray-400 font-light">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
                         </div>
                     </div>`;
             });
         });
 
+        // 5. 좋아요 효과 추가 (흔들림 애니메이션)
         window.likePost = async (id) => {
-            if(localStorage.getItem('voted_'+id)) return alert("이미 응원하셨습니다!");
+            if (localStorage.getItem('voted_2026_' + id)) return alert("이미 응원해주신 등불입니다! 😊");
+            
             const card = document.getElementById('card-' + id);
             card.classList.add('like-animation');
-            await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
-            localStorage.setItem('voted_'+id, true);
-            setTimeout(() => card.classList.remove('like-animation'), 400);
+            
+            try {
+                await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
+                localStorage.setItem('voted_2026_' + id, true);
+                setTimeout(() => card.classList.remove('like-animation'), 500);
+            } catch (e) { console.error(e); }
         };
 
+        // 6. 삭제 기능 (확인 메시지 포함)
         window.deletePost = async (id, correctPw) => {
-            const pw = prompt("비밀번호 입력");
+            const pw = prompt("삭제 비밀번호를 입력하세요.");
             if (pw === String(correctPw)) {
-                if (confirm("진짜 등불을 끄시겠어요?")) await deleteDoc(doc(db, "greetings", id));
-            } else if (pw !== null) alert("틀렸습니다.");
+                if (confirm("진짜 등불을 끄시겠어요?\n삭제된 등불은 다시 띄울 수 없습니다.")) {
+                    await deleteDoc(doc(db, "greetings", id));
+                    alert("등불이 내려갔습니다.");
+                }
+            } else if (pw !== null) {
+                alert("비밀번호가 일치하지 않습니다.");
+            }
         };
 
+        // 7. 엑셀(CSV) 추출 기능
         window.downloadCSV = async () => {
-            const pw = prompt("Admin Password?");
-            if (pw !== "admin2026") return alert("Denied");
+            const pw = prompt("관리자 인증 암호를 입력하세요.");
+            if (pw !== "admin2026") return alert("권한이 없습니다.");
+            
             const snap = await getDocs(colRef);
-            let csv = "\uFEFF닉네임,메시지,지역,학교,실명,번호,좋아요,날짜\n";
+            let csv = "\uFEFF닉네임,덕담메시지,지역,소속교,실명,연락처,좋아요수,등록시간\n";
             snap.forEach(d => {
                 const v = d.data();
-                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
+                const time = v.createdAt ? new Date(v.createdAt.seconds * 1000).toLocaleString() : "";
+                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${time}"\n`;
             });
-            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
-            a.href = url; a.download = "event_data.csv"; a.click();
+            a.href = url; a.download = `2026_이벤트_참여자데이터.csv`; a.click();
         };
     </script>
 </body>
