@@ -13,18 +13,18 @@
         .night-theme { background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%); color: #f8f9fa; }
         .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
-        
+
         /* 카드 디자인 */
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
         .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; }
         .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
         .regular-card { border-top: 5px solid #c0392b; }
-        
+
         /* 부적 팝업 스타일 */
         #charm-modal { display: none; background: rgba(0,0,0,0.8); z-index: 100; }
         .charm-box { width: 300px; height: 450px; background-size: cover; background-position: center; position: relative; }
         .charm-text { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); width: 80%; text-align: center; color: #c0392b; font-weight: 800; font-size: 1.2rem; line-height: 1.4; word-break: keep-all; }
-        
+
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .like-animation { animation: heartBeat 0.4s ease-in-out; }
     </style>
@@ -48,7 +48,7 @@
             <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-2.5 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs">
         </div>
         <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none"></textarea>
-        
+
         <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4">
             <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 참여 정보 (전원 필수 입력)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
@@ -76,7 +76,7 @@
     <div id="charm-modal" class="fixed inset-0 flex items-center justify-center p-4">
         <div class="bg-white p-6 rounded-[40px] text-center max-w-sm w-full">
             <h3 class="text-xl font-bold text-[#c0392b] mb-4">당신을 위한 2026 부적</h3>
-            <div id="charm-capture" class="charm-box mx-auto border-4 border-amber-200 rounded-2xl mb-4 flex items-center justify-center bg-[#fffcf0]" 
+            <div id="charm-capture" class="charm-box mx-auto border-4 border-amber-200 rounded-2xl mb-4 flex items-center justify-center bg-[#fffcf0]"
                  style="background-image: url('charm_base.png');"> <p id="charm-message" class="charm-text"></p>
             </div>
             <div class="flex gap-2">
@@ -141,7 +141,7 @@
             const hList = document.getElementById('honor-list');
             const gList = document.getElementById('greeting-list');
             hList.innerHTML = ''; gList.innerHTML = '';
-            
+
             let count = 0;
             snapshot.forEach((docSnap) => {
                 const item = docSnap.data();
@@ -156,7 +156,7 @@
                             <span class="text-[9px] text-gray-400">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
                         </div>
                     </div>`;
-                
+
                 if(count < 10) hList.innerHTML += cardHtml;
                 else gList.innerHTML += cardHtml;
                 count++;
@@ -173,13 +173,18 @@
         };
 
         window.downloadCharm = () => {
-            html2canvas(document.querySelector("#charm-capture")).then(canvas => {
-                const link = document.createElement('a');
-                link.download = '2026_행운부적.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        };
+      // scale 옵션을 추가하여 고해상도로 캡처 (2~3 권장)
+      html2canvas(document.querySelector("#charm-capture"), {
+          scale: 3, // 숫자가 높을수록 고화질 (너무 높으면 파일 용량이 커짐)
+          useCORS: true, // 외부 이미지를 사용하는 경우 필요
+          allowTaint: true
+      }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = '2026_행운부적.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+      });
+  };
 
         window.closeModal = () => { location.reload(); };
     </script>
