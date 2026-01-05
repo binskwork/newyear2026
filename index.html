@@ -14,32 +14,45 @@
         .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
         
-        /* 카드 및 레이아웃 */
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
         .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
         .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
         .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
-        /* ❤️ 하트 애니메이션 */
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .like-animation { animation: heartBeat 0.4s ease-in-out; }
 
-        /* 부적 팝업 (인스타 피드 사이즈 최적화) */
+        /* 🧧 부적 팝업 및 고화질 캡처 설정 */
         #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
         .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
         
-        /* 부적 이미지 영역 (사용자 제공 이미지 배경) */
+        /* 방법 1: img 태그를 활용한 캡처 영역 */
         #charm-capture { 
-            width: 300px; height: 375px; /* 인스타 4:5 비율 근접 */
-            background-image: url('charm_base.png'); 
-            background-size: 100% 100%; background-repeat: no-repeat;
-            position: relative; margin: 0 auto 20px;
+            width: 300px; 
+            position: relative; 
+            margin: 0 auto 20px;
+            border-radius: 15px;
             overflow: hidden;
+            background-color: #fff;
+        }
+        #charm-bg-img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
         .charm-text { 
-            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); 
-            width: 80%; text-align: center; color: #c0392b; font-weight: 900; font-size: 1.4rem; 
-            line-height: 1.6; word-break: keep-all;
+            position: absolute; 
+            top: 48%; /* 이미지 비율에 따라 조정 가능 */
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 85%; 
+            text-align: center; 
+            color: #c0392b; 
+            font-weight: 900; 
+            font-size: 1.4rem; 
+            line-height: 1.6; 
+            word-break: keep-all;
+            pointer-events: none;
         }
 
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
@@ -62,12 +75,12 @@
         <div class="absolute -bottom-7 -right-7 text-5xl">✨</div>
         <div class="flex gap-2 mb-2">
             <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
-            <input type="password" id="password" placeholder="비밀번호(수정/삭제용)/4~12자" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+            <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
         </div>
-        <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요✨" class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
+        <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
         
         <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4 text-gray-800">
-            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 [경품 배송/연락을 위한 정보 입력]</p>
+            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전부 기입 필수)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <input type="text" id="region" placeholder="지역" class="p-2 border rounded-lg text-[11px] bg-white">
                 <input type="text" id="school" placeholder="소속교" class="p-2 border rounded-lg text-[11px] bg-white">
@@ -94,10 +107,11 @@
         <div class="charm-container shadow-2xl">
             <h3 class="text-xl font-bold text-[#c0392b] mb-4">나의 2026 행운 부적</h3>
             <div id="charm-capture">
+                <img src="charm_base.png" id="charm-bg-img" alt="부적 배경">
                 <p id="charm-message" class="charm-text"></p>
             </div>
             <div class="flex gap-2">
-                <button onclick="downloadCharm()" class="flex-1 bg-[#d4af37] text-white py-4 rounded-2xl font-bold text-sm shadow-md">초고화질 저장</button>
+                <button onclick="downloadCharm()" class="flex-1 bg-[#d4af37] text-white py-4 rounded-2xl font-bold text-sm shadow-md">고화질 저장</button>
                 <button onclick="closeModal()" class="flex-1 bg-gray-100 text-gray-500 py-4 rounded-2xl font-bold text-sm">닫기</button>
             </div>
         </div>
@@ -159,32 +173,22 @@
         updateTheme();
 
         window.shareLink = () => {
-            const url = window.location.href;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
-            } else {
-                alert("주소창의 링크를 복사해 공유해 주세요!");
-            }
+            navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
         };
 
         window.saveGreeting = async () => {
             if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
-
             const getVal = (id) => document.getElementById(id).value.trim();
             const data = {
                 nickname: getVal('nickname'), message: getVal('message'), password: getVal('password'),
                 region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
                 likes: 0, createdAt: new Date()
             };
-
-            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) {
-                return alert("⚠️ 이벤트 참여를 위해 모든 항목을 빠짐없이 입력해 주세요!");
-            }
+            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) return alert("⚠️ 모든 항목을 빠짐없이 입력해 주세요!");
             if(!document.getElementById('agree').checked) return alert("⚠️ 개인정보 수집 동의가 필요합니다!");
 
             await addDoc(colRef, data);
             localStorage.setItem('registered_2026', 'true');
-
             document.getElementById('charm-message').innerText = fortuneMessages[Math.floor(Math.random() * fortuneMessages.length)];
             document.getElementById('charm-modal').style.display = 'flex';
         };
@@ -193,7 +197,6 @@
             const hList = document.getElementById('honor-list');
             const gList = document.getElementById('greeting-list');
             hList.innerHTML = ''; gList.innerHTML = '';
-            
             let count = 0;
             snapshot.forEach((docSnap) => {
                 const item = docSnap.data();
@@ -211,9 +214,7 @@
                             <span class="text-[9px] text-gray-400 font-light">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
                         </div>
                     </div>`;
-                
-                if(count < 10) hList.innerHTML += cardHtml;
-                else gList.innerHTML += cardHtml;
+                if(count < 10) hList.innerHTML += cardHtml; else gList.innerHTML += cardHtml;
                 count++;
             });
         });
@@ -237,9 +238,10 @@
         window.downloadCharm = () => {
             const target = document.querySelector("#charm-capture");
             html2canvas(target, {
-                scale: 4, // 4배 고화질
+                scale: 4, // 초고화질 캡처
                 useCORS: true, 
                 backgroundColor: null,
+                logging: false
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `2026_행운부적_${Date.now()}.png`;
@@ -268,4 +270,3 @@
     </script>
 </body>
 </html>
-
