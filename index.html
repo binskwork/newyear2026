@@ -14,22 +14,31 @@
         .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
         
-        /* 카드 디자인 */
+        /* 카드 및 배지 디자인 */
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
-        .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
         .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
-        /* 🛠️ TOP 배지 디자인 수정 (닉네임 안 가리게) */
-        .top-badge { position: absolute; top: -12px; left: 15px; background: #d4af37; color: white; padding: 2px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 40; }
+        /* 배지 위치: 우측 상단 삭제 버튼 옆 */
+        .top-badge { position: absolute; top: 10px; right: 45px; background: #d4af37; color: white; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 800; z-index: 30; }
 
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        .like-animation { animation: heartBeat 0.4s ease-in-out; }
+
+        /* 부적 모달 스타일 */
         #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
         .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
-        
-        /* 부적 이미지 영역 */
         #charm-capture { width: 300px; position: relative; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; background-color: #fff; }
         #charm-bg-img { width: 100%; height: auto; display: block; }
-        .charm-text { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); width: 85%; text-align: center; color: #c0392b; font-weight: 900; font-size: 1.3rem; line-height: 1.6; word-break: keep-all; pointer-events: none; }
+        
+        /* 장문 운세 최적화 텍스트 스타일 */
+        .charm-text { 
+            position: absolute; top: 46%; left: 50%; transform: translate(-50%, -50%); 
+            width: 80%; text-align: left; color: #4a3318; font-weight: 600; 
+            font-size: 0.92rem; line-height: 1.6; word-break: keep-all; pointer-events: none;
+            white-space: pre-wrap;
+        }
 
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
@@ -51,20 +60,20 @@
         <div class="absolute -bottom-7 -right-7 text-5xl">✨</div>
         <div class="flex gap-2 mb-2">
             <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
-            <input type="password" id="password" placeholder="비밀번호(삭제용)" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+            <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
         </div>
         <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
         
         <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4 text-gray-800">
             <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전원 필수 입력)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <input type="text" id="region" placeholder="지역(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="school" placeholder="소속교(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="realName" placeholder="실명(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="phone" placeholder="연락처(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="region" placeholder="지역" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="school" placeholder="소속교" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="realName" placeholder="실명" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="phone" placeholder="연락처" class="p-2 border rounded-lg text-[11px] bg-white">
             </div>
             <div class="text-[9px] text-gray-500 bg-white/50 p-2 rounded-lg border leading-tight mb-3">
-                [개인정보 수집 안내] 수집처: 아이스크림아트 / 목적: 경품 발송 및 안내 / 기간: 목적 달성 후 즉시 파기
+                [개인정보 수집 안내] 수집처: 아이스크림아트 / 목적: 경품 발송 / 항목: 성명, 연락처, 지역, 소속교 / 기간: 목적 달성 후 즉시 파기
             </div>
             <label class="flex items-center text-[10px] text-gray-600 cursor-pointer font-bold">
                 <input type="checkbox" id="agree" class="mr-2 w-4 h-4 accent-[#c0392b]"> 개인정보 수집 및 이용에 동의합니다.
@@ -77,7 +86,7 @@
         <h2 class="text-[#d4af37] font-bold text-center mb-5 flex items-center justify-center gap-2">
             <span>✨</span> 명예의 덕담 (TOP 10) <span>✨</span>
         </h2>
-        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide"></div>
+        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide p-2"></div>
     </div>
 
     <div id="greeting-list" class="card-grid max-w-6xl mx-auto"></div>
@@ -118,134 +127,110 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        // 🎰 확률 기반 운세 데이터 (희귀 10, 중간 20, 일반 30)
+        // 🎰 업데이트된 운세 DB (희귀 5 / 중간 15 / 일반 20)
         const fortunes = {
-            rare: [ // 10% - 사자성어 포함 고품격 운세
-                "만사형통(萬事亨通):\n행정 업무 제로, 수업에만 전념하는 한 해!",
-                "금상첨화(錦上添花):\n역대급 천사 아이들만 만나는 기적!",
-                "고진감래(苦盡甘來):\n지난해 고생 끝, 올해는 꽃길만 걷는 1년!",
-                "화룡점정(畵龍點睛):\n모든 수업 아이디어가 대박 터지는 해!",
-                "일취월장(日就月將):\n선생님의 전문성이 빛을 발하는 2026년!",
-                "승승장구(乘勝長驅):\n승진, 연구, 상장까지 모두 휩쓰는 기운!",
-                "무사태평(無事泰平):\n학급 사고 제로, 평안한 365일 보장!",
-                "천생연분(天生緣分):\n동료 선생님들과 찰떡궁합, 최고의 팀워크!",
-                "운수대통(運數大通):\n생각지 못한 예산과 교구가 쏟아지는 해!",
-                "명불허전(名不虛傳):\n학부모님들 사이에서 갓선생님으로 등극!"
+            rare: [ // 10% - rare_base.png (편지봉투)
+                "만사형통(萬事亨通)의 기운이 깃드는 해!\n올해는 행정 업무 제로, 수업 아이디어 대박!\n선생님이 꿈꾸던 가장 이상적인 학급 운영이 현실로 다가옵니다. 모든 순간이 성장의 발판이 될 거예요.",
+                "고진감래(苦盡甘來), 작년의 수고가 꽃을 피웁니다.\n힘들었던 경험은 밑거름이 되어, 올해는 천사 같은 아이들과 환상적인 케미를 자랑하게 될 것입니다. 선생님의 진심이 드디어 빛을 발합니다.",
+                "금상첨화(錦上添花), 기쁜 소식이 겹쳐 옵니다.\n학급 분위기는 역대 최고, 여기에 생각지 못한 포상이나 예산 지원까지! 선생님의 교직 생활 중 가장 화려하고 행복한 한 해가 약속되어 있습니다.",
+                "일취월장(日就月將), 전문성이 폭발하는 해!\n새로운 연수나 연구 활동에서 최고의 성과를 거두며, 동료들에게 귀감이 되는 '갓선생님'으로 거듭납니다. 선생님의 가치가 증명되는 해가 될 거예요.",
+                "전도유망(前途有望), 밝은 미래가 열립니다.\n신학기 배정부터 학급 구성까지, 모든 운이 선생님 편입니다. 어떤 도전도 성공으로 이어지며, 일 년 내내 웃음 끊이지 않는 교실의 주인공이 됩니다."
             ],
-            medium: [ // 25% - 학급 운영 및 업무 경감
-                "신학기 첫날부터\n아이들이 규칙을 척척 지킵니다.",
-                "올해는 퇴근 요정이 돕는 해,\n매일 칼퇴근이 현실이 됩니다.",
-                "복잡한 공문들이\n알아서 척척 해결되는 업무운!",
-                "수업 시간에 아이들의\n초롱초롱한 눈빛이 가득합니다.",
-                "나를 힘들게 하던 행정 업무가\n획기적으로 줄어듭니다.",
-                "학부모 상담마다\n감사 인사가 쏟아지는 행복!",
-                "교실에 햇살만 가득,\n빌런 없는 평온한 학급 운영.",
-                "창의적 체험활동 아이디어가\n매일 밤 샘솟습니다.",
-                "동료 교사들과의 커피 한 잔이\n가장 큰 힐링이 되는 해.",
-                "급식 메뉴가 매일\n선생님의 최애 메뉴로 구성됩니다.",
-                "수업 나눔 시간에\n최고의 찬사를 받는 전문성!",
-                "공개 수업이 떨림 없이\n완벽하게 마무리됩니다.",
-                "체육 대회와 현장 학습마다\n날씨 요정이 함께합니다.",
-                "교사 동아리 활동에서\n새로운 재능을 발견하게 됩니다.",
-                "올해는 연수마다\n인생 강의를 만나는 지혜의 해.",
-                "아이들의 일기 속에\n선생님 사랑이 가득 담깁니다.",
-                "교실 환경 미화가\n단숨에 끝나는 손재주의 축복.",
-                "학기 말 생기부 작성이\n빛의 속도로 끝납니다.",
-                "신학기 준비가\n스트레스 없이 즐겁게 마무리됩니다.",
-                "선생님의 건강이 최고,\n일 년 내내 활기가 넘칩니다."
+            medium: [ // 25% - medium_base.png (꽃무늬)
+                "올해는 '칼퇴 요정'이 선생님 곁을 지킵니다.\n복잡한 공문 처리가 빛의 속도로 해결되고, 매일 저녁 나만을 위한 온전한 휴식 시간이 보장되는 기적 같은 업무운이 따릅니다.",
+                "동료 선생님들과의 찰떡궁합 팀워크!\n마음 맞는 옆 반 선생님 덕분에 힘든 일도 웃으며 넘길 수 있습니다. 든든한 동료애 속에서 교직의 즐거움을 다시금 발견하는 해가 됩니다.",
+                "학부모님들의 깊은 신뢰와 지지.\n선생님의 교육 철학을 이해하고 지지해주는 든든한 학부모님들 덕분에, 상담 시간이 기다려지는 마법 같은 소통의 운이 들어와 있습니다.",
+                "아이들의 눈빛이 초롱초롱하게 빛나는 해.\n선생님의 설명 한마디에 집중하는 아이들의 모습에서 깊은 보람을 느낍니다. 수업의 재미와 교사의 긍지를 동시에 챙기는 일 년이 될 거예요.",
+                "창의적 체험활동 아이디어 뱅크 등극!\n수업 시간마다 톡톡 튀는 활동으로 아이들을 사로잡습니다. 교실은 늘 활기차고, 선생님의 수업 방식은 학교의 트렌드가 됩니다.",
+                "학급 비품과 예산이 넉넉히 확보됩니다.\n원하던 교구와 환경 미화 재료들이 척척 준비되어, 선생님이 꿈꾸던 예쁜 교실 공간을 완벽하게 꾸미게 되는 물질적 풍요의 해입니다.",
+                "예기치 못한 보너스나 성과급의 행운!\n성실히 걸어온 길에 대한 따뜻한 보상이 찾아옵니다. 금전적인 여유와 함께 마음까지 넉넉해지는 기분 좋은 소식이 기다리고 있습니다.",
+                "공개 수업이 '인생 수업'이 되는 날.\n떨림은 설렘으로 바뀌고, 참관하시는 분들의 극찬 속에 마무리됩니다. 선생님의 역량이 만천하에 공개되는 자랑스러운 순간이 옵니다.",
+                "지친 일상 속 소소하지만 확실한 행복.\n급식 메뉴가 매일 최애 반찬으로 나오고, 주차 자리가 늘 명당인 소소한 행운들이 모여 선생님의 일상을 즐겁게 채워줄 것입니다.",
+                "학기 말 생활기록부 작성이 수월해집니다.\n아이들의 장점이 눈에 쏙쏙 들어와 문장이 술술 써지는 마법! 밤샘 없는 평온한 학기 말 마무리가 선생님을 기다리고 있습니다.",
+                "신학기 첫날, 아이들과의 기분 좋은 만남.\n선생님을 기다려온 아이들의 설레는 표정에서 새로운 시작의 에너지를 얻습니다. 첫 단추부터 완벽하게 끼워지는 신학기 운입니다.",
+                "교사 동아리나 취미 활동에서의 큰 즐거움.\n학교 밖 삶에서도 새로운 활력을 찾게 됩니다. 워라밸이 완벽하게 균형을 이루며 삶의 질이 한 단계 업그레이드되는 경험을 합니다.",
+                "나를 힘들게 하던 고질적인 문제가 해결됩니다.\n까다로웠던 업무나 대인 관계의 실타래가 의외의 계기로 술술 풀려, 마음의 짐을 내려놓고 홀가분하게 지낼 수 있게 됩니다.",
+                "선생님의 건강이 최고조에 달하는 해.\n일 년 내내 잔병치레 없이 에너지가 넘칩니다. 규칙적인 생활과 긍정적인 마음가짐이 선생님을 가장 아름답고 건강하게 만들어 줄 것입니다.",
+                "아이들의 일기 속에 담긴 선생님 향한 진심.\n\"선생님이 우리 담임이라서 정말 좋아요\"라는 문구 한 줄에 모든 피로가 녹아내리는 감동적인 순간들이 매달 찾아올 것입니다."
             ],
-            common: [ // 65% - 안전 및 소소한 공감
-                "안전한 1년:\n교실 내 안전사고가 절대 없습니다.",
-                "커피 한 잔의 여유가\n보장되는 평화로운 아침.",
-                "아이들이 선생님의 진심을\n알아주는 따뜻한 날들.",
-                "교내 복사기가\n오늘따라 고장 없이 잘 돌아갑니다.",
-                "출근길 신호등이\n연속 초록불인 소소한 행운.",
-                "점심 급식 반찬이\n풍족하게 남는 넉넉한 하루.",
-                "복도에서 만나는 아이들마다\n밝게 인사해 주는 기쁨.",
-                "수업 종이 치기 전에\n모든 준비가 끝나는 여유.",
-                "단톡방 알림이 조용한\n평화로운 저녁 시간.",
-                "생기부 오타를\n제출 직전에 발견하는 천운!",
-                "예상치 못한 간식 선물이\n책상 위에 놓여있습니다.",
-                "아이들이 서로 배려하며\n다툼 없는 교실 분위기.",
-                "교실 화분이\n일 년 내내 푸르게 자라는 생명력.",
-                "학급 비품 신청이\n한 번에 통과되는 행정운.",
-                "퇴근 후 만나는\n노을이 유난히 예쁜 하루.",
-                "아이들의 웃음소리가\n음악처럼 들리는 교실.",
-                "신학기 교실 배정이\n가장 명당으로 당첨!",
-                "업무 수첩에 체크표시가\n빠르게 늘어나는 생산성.",
-                "동학년 선생님들과의\n수다가 스트레스를 날려줍니다.",
-                "학부모님의 응원 문자 한 통에\n피로가 싹 가십니다.",
-                "수업 보조 자료가\n찰떡같이 준비되는 날.",
-                "아이들이 스스로 교실을\n정리 정돈하는 기특함.",
-                "회의가 예상보다\n30분 일찍 끝나는 축복.",
-                "선생님의 목 상태가\n일 년 내내 쌩쌩한 해.",
-                "비 오는 날 창가에서\n아이들과 읽는 동화책의 낭만.",
-                "교무실 내 자리가\n가장 아늑하고 편안합니다.",
-                "학급 문고에 좋은 책들이\n선물로 들어오는 운.",
-                "아이들의 성장이\n눈에 띄게 보이는 보람찬 해.",
-                "선생님의 미소가\n아이들에게 가장 큰 교육이 됩니다.",
-                "오늘 하루도 무사히,\n수고한 나를 위한 따뜻한 위로."
+            common: [ // 65% - common_base.png (말/장식)
+                "안전하고 평온한 교실 운영이 보장됩니다.\n사고 없는 365일, 아이들이 건강하게 생활하며 선생님의 마음도 늘 평화로운 무사태평한 한 해가 약속되어 있습니다.",
+                "따뜻한 커피 한 잔의 여유가 있는 아침.\n출근 후 수업 시작 전, 온전히 나를 위한 짧은 휴식이 보장됩니다. 그 작은 여유가 선생님의 하루를 온종일 지탱해 줄 거예요.",
+                "아이들의 순수한 미소에서 얻는 힐링.\n복도에서 마주칠 때마다 밝게 웃으며 인사하는 아이들 덕분에, 선생님의 입가에도 늘 미소가 떠나지 않는 기분 좋은 날들입니다.",
+                "오늘 하루도 무사히 마친 당신에게 박수를.\n큰 이벤트는 없어도 별 탈 없이 지나가는 평범한 하루가 쌓여 선생님의 가장 단단한 교직 경력이 됩니다. 정말 잘하고 계십니다.",
+                "퇴근길 마주하는 유난히 예쁜 노을.\n바쁜 업무를 마치고 나서는 길, 하늘이 주는 작은 선물에 위로받는 하루가 많아집니다. 자연이 주는 힐링을 마음껏 누리세요.",
+                "아이들이 스스로 정리정돈하는 기특한 날.\n잔소리 없이도 교실이 깨끗하게 유지되는 소소한 기쁨! 선생님의 지도 방식이 아이들의 습관으로 자리 잡는 보람찬 순간입니다.",
+                "비 오는 날 창가에서 아이들과 읽는 동화책.\n차분한 분위기 속에서 아이들과 공감대를 형성하는 낭만적인 시간들이 선생님의 정서를 풍요롭게 채워줄 것입니다.",
+                "복사기가 고장 없이 척척 작동하는 행운.\n바쁜 아침, 선생님의 수고를 덜어주는 소소한 기계운(?)까지 따르는 날들! 사소한 것들이 도와주는 편안한 근무 환경이 조성됩니다.",
+                "내 책상 위에 몰래 놓인 아이의 사탕 한 알.\n서툰 글씨로 쓴 '사랑해요' 쪽지와 함께 전달된 작은 진심이 선생님의 교사로서의 존재 이유를 다시금 일깨워 줍니다.",
+                "점심 급식 메뉴가 유난히 맛있는 하루.\n좋아하는 메뉴가 가득한 식판을 마주하며 동료들과 즐거운 대화를 나누는 시간. 소박하지만 확실한 행복이 매일 이어집니다.",
+                "학급 비품이 분실 없이 잘 보존되는 해.\n물건 하나하나를 아껴 쓰는 아이들의 모습에서 교육의 결실을 봅니다. 스트레스 없는 비품 관리가 선생님을 편안하게 합니다.",
+                "수업 종이 치기 전 완벽하게 끝나는 판서.\n시간 배분이 척척 맞아떨어지는 완벽한 강의운! 선생님의 수업 리듬이 아이들의 배움과 조화를 이루는 안정적인 해입니다.",
+                "단톡방 알림이 조용한 평화로운 저녁.\n퇴근 후에는 온전히 선생님만의 시간입니다. 불필요한 연락 없이 휴식에만 집중할 수 있는 퇴근 후의 평화가 지켜집니다.",
+                "계획했던 진도가 차질 없이 진행됩니다.\n예상치 못한 행사로 수업이 빠지는 일 없이, 차근차근 교육과정을 완수하며 느끼는 성취감이 선생님의 자신감을 높여줄 것입니다.",
+                "아이들이 서로 배려하며 다툼 없는 교실.\n중재할 일 없이 아이들끼리 해결하는 성숙한 모습. 선생님의 인성 교육이 아이들의 삶에 녹아들어 평화로운 공동체를 만듭니다.",
+                "오늘따라 신호등이 연속 초록불인 출근길.\n하루의 시작부터 운이 따르는 기분 좋은 징조들. 선생님의 2026년은 이런 작은 행운들이 모여 거대한 행복의 바다를 이룰 것입니다.",
+                "선생님의 목 상태가 일 년 내내 쌩쌩합니다.\n무리가 갈 법한 날에도 목소리가 잘 나와 수업이 즐거워집니다. 선생님의 목소리가 아이들에게 가장 아름다운 음악이 됩니다.",
+                "생기부 오타를 제출 직전에 발견하는 천운.\n큰 실수를 막아주는 예리한 관찰력과 운이 함께합니다. 완벽한 마무리로 신뢰받는 교사의 품격을 유지하게 될 것입니다.",
+                "아이들의 웃음소리가 음악처럼 들리는 오후.\n교실 가득 퍼지는 건강한 웃음소리가 선생님의 지친 마음을 어루만져 줍니다. 아이들의 행복이 곧 선생님의 행복이 되는 해입니다.",
+                "오늘 하루도 당신의 자리에서 최선을 다했습니다.\n눈에 띄는 성과가 없어도 당신은 이미 충분히 훌륭한 교사입니다. 스스로를 토닥여주세요. 선생님은 아이들의 영웅입니다."
             ]
         };
 
         function getWeightedFortune() {
             const random = Math.random();
-            let selectedCategory, categoryKey;
-            if (random < 0.1) { selectedCategory = fortunes.rare; categoryKey = 'rare_base.png'; }
-            else if (random < 0.35) { selectedCategory = fortunes.medium; categoryKey = 'medium_base.png'; }
-            else { selectedCategory = fortunes.common; categoryKey = 'common_base.png'; }
+            let selectedCategory, imgKey;
+            // 이미지 매칭 수정: 희귀(편지봉투), 중간(꽃), 일반(말/장식)
+            if (random < 0.1) { selectedCategory = fortunes.rare; imgKey = 'rare_base.png'; }
+            else if (random < 0.35) { selectedCategory = fortunes.medium; imgKey = 'medium_base.png'; }
+            else { selectedCategory = fortunes.common; imgKey = 'common_base.png'; }
             
             const msg = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
-            return { msg, img: categoryKey };
+            return { msg, img: imgKey };
         }
 
-        function createStars() {
-            const container = document.getElementById('star-container');
-            for (let i = 0; i < 40; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 2 + 1 + 'px';
-                star.style.height = star.style.width;
-                star.style.left = Math.random() * 100 + 'vw';
-                star.style.top = Math.random() * -100 + 'vh';
-                star.style.animationDuration = Math.random() * 10 + 5 + 's';
-                star.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(star);
-            }
+        // 별 생성 로직
+        const container = document.getElementById('star-container');
+        for (let i = 0; i < 40; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 2 + 1 + 'px'; star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + 'vw'; star.style.top = Math.random() * -100 + 'vh';
+            star.style.animationDuration = Math.random() * 10 + 5 + 's'; star.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(star);
         }
-        createStars();
 
-        const updateTheme = () => {
-            const hour = new Date().getHours();
-            if (hour >= 18 || hour < 6) {
-                document.body.classList.replace('day-theme', 'night-theme');
-                document.getElementById('main-title').classList.replace('text-[#c0392b]', 'text-[#ffcc00]');
-            }
-        };
-        updateTheme();
+        const hour = new Date().getHours();
+        if (hour >= 18 || hour < 6) {
+            document.body.classList.replace('day-theme', 'night-theme');
+            document.getElementById('main-title').classList.replace('text-[#c0392b]', 'text-[#ffcc00]');
+        }
 
         window.shareLink = () => {
             navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
         };
 
+        // 🛠️ 저장 및 유효성 검사 (모든 빈칸 체크)
         window.saveGreeting = async () => {
             if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
             const getVal = (id) => document.getElementById(id).value.trim();
-            const data = {
-                nickname: getVal('nickname'), password: getVal('password'), message: getVal('message'),
-                region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
-                likes: 0, createdAt: new Date()
-            };
-            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) return alert("⚠️ 당첨자 정보를 포함한 모든 항목을 입력해 주세요!");
-            if(!document.getElementById('agree').checked) return alert("⚠️ 개인정보 수집 동의가 필요합니다!");
+            const nickname = getVal('nickname'), password = getVal('password'), message = getVal('message'),
+                  region = getVal('region'), school = getVal('school'), realName = getVal('realName'), phone = getVal('phone'),
+                  agree = document.getElementById('agree').checked;
 
-            await addDoc(colRef, data);
-            localStorage.setItem('registered_2026', 'true');
-            
-            const selected = getWeightedFortune();
-            document.getElementById('charm-message').innerText = selected.msg;
-            document.getElementById('charm-bg-img').src = selected.img; // 등급별 이미지 적용
-            document.getElementById('charm-modal').style.display = 'flex';
+            if(!nickname || !password || !message || !region || !school || !realName || !phone) {
+                return alert("⚠️ 이벤트 참여를 위해 모든 항목을 입력해 주세요! 빈칸이 있으면 등불을 띄울 수 없습니다.");
+            }
+            if(!agree) return alert("⚠️ 개인정보 수집 및 이용 안내에 동의해 주세요!");
+
+            try {
+                await addDoc(colRef, { nickname, message, password, region, school, realName, phone, likes: 0, createdAt: new Date() });
+                localStorage.setItem('registered_2026', 'true');
+                const selected = getWeightedFortune();
+                document.getElementById('charm-message').innerText = selected.msg;
+                document.getElementById('charm-bg-img').src = selected.img;
+                document.getElementById('charm-modal').style.display = 'flex';
+            } catch (e) { alert("서버 오류가 발생했습니다."); }
         };
 
         onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
@@ -256,8 +241,9 @@
             snapshot.forEach((docSnap) => {
                 const item = docSnap.data();
                 const id = docSnap.id;
+                // 🛠️ 배지 위치 최적화: 우측 상단 닉네임 가림 방지
                 const cardHtml = `
-                    <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg relative">
+                    <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg">
                         ${count < 10 ? `<span class="top-badge">TOP ${count+1}</span>` : ''}
                         <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold z-30">✕</button>
                         <div>
@@ -276,52 +262,24 @@
 
         window.likePost = async (id) => {
             if(localStorage.getItem('voted_2026_'+id)) return alert("이미 응원해주신 덕담입니다! ❤️");
-            const card = document.getElementById('card-' + id);
-            card.classList.add('like-animation');
+            const card = document.getElementById('card-' + id); card.classList.add('like-animation');
             await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
             localStorage.setItem('voted_2026_'+id, true);
             setTimeout(() => card.classList.remove('like-animation'), 500);
         };
 
+        // 🛠️ 삭제 기능: 로컬 기록 초기화 포함
         window.deletePost = async (id, correctPw) => {
             const pw = prompt("삭제 비밀번호를 입력해 주세요.");
             if (pw === String(correctPw) || pw === "admin2026") {
-                if (confirm("정말로 이 등불을 끄시겠습니까?")) {
-                    await deleteDoc(doc(db, "greetings", id));
-                    localStorage.removeItem('registered_2026');
-                    alert("삭제되었습니다.");
-                    location.reload();
+                if (confirm("정말로 이 등불을 끄시겠습니까? 삭제 후 다시 참여 가능합니다.")) {
+                    try {
+                        await deleteDoc(doc(db, "greetings", id));
+                        localStorage.removeItem('registered_2026');
+                        alert("삭제되었습니다. 다시 등록하실 수 있습니다!"); location.reload();
+                    } catch (e) { alert("오류 발생"); }
                 }
             } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
         };
 
-        window.downloadCharm = () => {
-            const target = document.querySelector("#charm-capture");
-            html2canvas(target, { scale: 4, useCORS: true, backgroundColor: null }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `2026_행운부적_${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.click();
-            });
-        };
-
-        window.closeModal = () => { location.reload(); };
-
-        window.downloadCSV = async () => {
-            const pw = prompt("Admin?");
-            if (pw !== "admin2026") return;
-            const snap = await getDocs(colRef);
-            let csv = "\uFEFF닉네임,메세지,지역,학교,실명,연락처,좋아요,날짜\n";
-            snap.forEach(d => {
-                const v = d.data();
-                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
-            });
-            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "event_data.csv";
-            link.click();
-        };
-    </script>
-</body>
-</html>
+        //
