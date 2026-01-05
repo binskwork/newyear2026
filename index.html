@@ -16,8 +16,8 @@
         
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
         .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
-        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); position: relative; } /* relative 추가 */
-        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; } /* relative 추가 */
+        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); position: relative; }
+        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; }
         
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .like-animation { animation: heartBeat 0.4s ease-in-out; }
@@ -66,7 +66,7 @@
                 <strong>[개인정보 수집 및 이용 안내]</strong><br>
                 - 수집 항목: 성명, 연락처, 지역, 소속교<br>
                 - 수집 목적: 이벤트 경품 발송 및 안내<br>
-                - 보유 기간: <strong>당첨자 선정 및 목적 달성 후 즉시 파기</strong><br>
+                - 보유 기간: <strong>목적 달성 후 즉시 파기</strong><br>
                 - 수집처: 아이스크림아트
             </div>
 
@@ -81,7 +81,8 @@
         <h2 class="text-[#d4af37] font-bold text-center mb-5 flex items-center justify-center gap-2">
             <span>✨</span> 명예의 덕담 (TOP 10) <span>✨</span>
         </h2>
-        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide p-2"></div> </div>
+        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide p-2"></div>
+    </div>
 
     <div id="greeting-list" class="card-grid max-w-6xl mx-auto"></div>
 
@@ -134,42 +135,145 @@
             else return fortunes.common[Math.floor(Math.random() * fortunes.common.length)];
         }
 
-        function createStars() {
-            const container = document.getElementById('star-container');
-            for (let i = 0; i < 40; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = Math.random() * 2 + 1 + 'px';
-                star.style.height = star.style.width;
-                star.style.left = Math.random() * 100 + 'vw';
-                star.style.top = Math.random() * -100 + 'vh';
-                star.style.animationDuration = Math.random() * 10 + 5 + 's';
-                star.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(star);
-            }
+        // 별 생성 및 테마 설정
+        const container = document.getElementById('star-container');
+        for (let i = 0; i < 40; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 2 + 1 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * -100 + 'vh';
+            star.style.animationDuration = Math.random() * 10 + 5 + 's';
+            star.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(star);
         }
-        createStars();
 
-        const updateTheme = () => {
-            const hour = new Date().getHours();
-            if (hour >= 18 || hour < 6) {
-                document.body.classList.replace('day-theme', 'night-theme');
-                document.getElementById('main-title').classList.replace('text-[#c0392b]', 'text-[#ffcc00]');
-            }
-        };
-        updateTheme();
+        const hour = new Date().getHours();
+        if (hour >= 18 || hour < 6) {
+            document.body.classList.replace('day-theme', 'night-theme');
+            document.getElementById('main-title').classList.replace('text-[#c0392b]', 'text-[#ffcc00]');
+        }
 
         window.shareLink = () => {
             navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
         };
 
+        // 🛠️ 등불 저장 및 유효성 검사 함수 (강화됨)
         window.saveGreeting = async () => {
-            if(localStorage.getItem('registered_2026')) {
-                return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
+            if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
+
+            const getVal = (id) => {
+                const el = document.getElementById(id);
+                return el ? el.value.trim() : "";
+            };
+
+            const nickname = getVal('nickname');
+            const password = getVal('password');
+            const message = getVal('message');
+            const region = getVal('region');
+            const school = getVal('school');
+            const realName = getVal('realName');
+            const phone = getVal('phone');
+            const agree = document.getElementById('agree').checked;
+
+            // 빈칸 검사 팝업 (하나라도 비어있으면 실행)
+            if(!nickname || !password || !message || !region || !school || !realName || !phone) {
+                return alert("⚠️ 이벤트 당첨자 정보를 포함한 모든 항목을 입력해야 등불을 띄울 수 있습니다!");
+            }
+            if(!agree) {
+                return alert("⚠️ 개인정보 수집 및 이용 안내에 동의해 주세요!");
             }
 
-            const getVal = (id) => document.getElementById(id).value.trim();
-            const data = {
-                nickname: getVal('nickname'), password: getVal('password'), message: getVal('message'),
-                region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
-                likes: 0, createdAt
+            try {
+                await addDoc(colRef, { nickname, message, password, region, school, realName, phone, likes: 0, createdAt: new Date() });
+                localStorage.setItem('registered_2026', 'true');
+                document.getElementById('charm-message').innerText = getWeightedFortune();
+                document.getElementById('charm-modal').style.display = 'flex';
+            } catch (e) {
+                alert("서버 연결에 실패했습니다. 다시 시도해 주세요.");
+            }
+        };
+
+        // 데이터 리스트 실시간 로드
+        onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
+            const hList = document.getElementById('honor-list');
+            const gList = document.getElementById('greeting-list');
+            hList.innerHTML = ''; gList.innerHTML = '';
+            let count = 0;
+            snapshot.forEach((docSnap) => {
+                const item = docSnap.data();
+                const id = docSnap.id;
+                const cardHtml = `
+                    <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg relative">
+                        ${count < 10 ? `<span class="absolute top-2 left-2 bg-[#d4af37] text-white text-[10px] px-2 py-1 rounded-full font-bold shadow-sm z-10">TOP ${count+1}</span>` : ''}
+                        <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold z-30">✕</button>
+                        <div>
+                            <p class="text-[10px] text-[#c0392b] font-bold mb-1">@${item.nickname}</p>
+                            <p class="text-gray-800 text-[14px] leading-relaxed font-medium line-clamp-3">${item.message}</p>
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-3 mt-2">
+                            <button onclick="window.likePost('${id}')" class="text-red-500 font-bold text-xs hover:scale-110 transition-transform">❤️ <span>${item.likes}</span></button>
+                            <span class="text-[9px] text-gray-400 font-light">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
+                        </div>
+                    </div>`;
+                if(count < 10) hList.innerHTML += cardHtml; else gList.innerHTML += cardHtml;
+                count++;
+            });
+        });
+
+        window.likePost = async (id) => {
+            if(localStorage.getItem('voted_2026_'+id)) return alert("이미 응원해주신 덕담입니다! ❤️");
+            const card = document.getElementById('card-' + id);
+            card.classList.add('like-animation');
+            await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
+            localStorage.setItem('voted_2026_'+id, true);
+            setTimeout(() => card.classList.remove('like-animation'), 500);
+        };
+
+        window.deletePost = async (id, correctPw) => {
+            const pw = prompt("삭제 비밀번호를 입력해 주세요.");
+            if (pw === String(correctPw) || pw === "admin2026") {
+                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 다시 참여하실 수 있습니다.")) {
+                    try {
+                        await deleteDoc(doc(db, "greetings", id));
+                        localStorage.removeItem('registered_2026');
+                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다! 😊");
+                        location.reload();
+                    } catch (e) {
+                        alert("오류가 발생했습니다.");
+                    }
+                }
+            } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
+        };
+
+        window.downloadCharm = () => {
+            const target = document.querySelector("#charm-capture");
+            html2canvas(target, { scale: 4, useCORS: true, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `2026_행운부적_${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            });
+        };
+
+        window.closeModal = () => { location.reload(); };
+
+        window.downloadCSV = async () => {
+            const pw = prompt("Admin?");
+            if (pw !== "admin2026") return;
+            const snap = await getDocs(colRef);
+            let csv = "\uFEFF닉네임,메세지,지역,학교,실명,연락처,좋아요,날짜\n";
+            snap.forEach(d => {
+                const v = d.data();
+                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
+            });
+            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "event_data.csv";
+            link.click();
+        };
+    </script>
+</body>
+</html>
