@@ -14,7 +14,6 @@
         .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
         
-        /* 카드 스타일 */
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
         .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
         .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
@@ -23,7 +22,6 @@
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .like-animation { animation: heartBeat 0.4s ease-in-out; }
 
-        /* 부적 팝업 및 이미지 최적화 */
         #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
         .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
         #charm-capture { width: 300px; position: relative; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; background-color: #fff; }
@@ -66,10 +64,8 @@
             
             <div class="text-[9px] text-gray-500 bg-white/50 p-2 rounded-lg border leading-tight mb-3">
                 <strong>[개인정보 수집 및 이용 안내]</strong><br>
-                - 수집 항목: 성명, 연락처, 지역, 소속교<br>
-                - 수집 목적: 이벤트 경품 발송 및 안내<br>
-                - 보유 및 이용 기간: <strong>목적 달성 후 즉시 파기</strong><br>
-                - 수집처: 아이스크림아트
+                - 수집 항목: 성명, 연락처, 지역, 소속교 / - 수집 목적: 이벤트 경품 발송<br>
+                - 보유 기간: <strong>목적 달성 후 즉시 파기</strong> / - 수집처: 아이스크림아트
             </div>
 
             <label class="flex items-center text-[11px] text-gray-700 cursor-pointer font-bold">
@@ -96,7 +92,7 @@
                 <p id="charm-message" class="charm-text"></p>
             </div>
             <div class="flex gap-2">
-                <button onclick="downloadCharm()" class="flex-1 bg-[#d4af37] text-white py-4 rounded-2xl font-bold text-sm shadow-md">초고화질 저장</button>
+                <button onclick="downloadCharm()" class="flex-1 bg-[#d4af37] text-white py-4 rounded-2xl font-bold text-sm shadow-md">고화질 저장</button>
                 <button onclick="closeModal()" class="flex-1 bg-gray-100 text-gray-500 py-4 rounded-2xl font-bold text-sm">닫기</button>
             </div>
         </div>
@@ -124,11 +120,10 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        // 🎰 확률 기반 운세 데이터
         const fortunes = {
-            rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"], // 10%
-            medium: ["만사형통:\n하는 일마다 술술 풀릴 것입니다.", "운수대통:\n생각지 못한 큰 복이 굴러옵니다."], // 25%
-            common: ["금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.", "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.", "일취월장:\n당신의 재능이 빛을 발할 것입니다."] // 65%
+            rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"],
+            medium: ["만사형통:\n하는 일마다 술술 풀릴 것입니다.", "운수대통:\n생각지 못한 큰 복이 굴러옵니다."],
+            common: ["금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.", "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.", "일취월장:\n당신의 재능이 빛을 발할 것입니다."]
         };
 
         function getWeightedFortune() {
@@ -167,8 +162,9 @@
             navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
         };
 
-        // 🛠️ 유효성 검사 팝업 로직 복구
         window.saveGreeting = async () => {
+            // 중복 참여 체크 시, LocalStorage 외에 실시간 확인 로직은 복잡하므로 
+            // 현재 구조에서는 LocalStorage를 가장 신뢰합니다.
             if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
 
             const getVal = (id) => document.getElementById(id).value.trim();
@@ -181,20 +177,16 @@
             const phone = getVal('phone');
             const agree = document.getElementById('agree').checked;
 
-            // 빈칸 검사 강화
             if(!nickname || !password || !message || !region || !school || !realName || !phone) {
-                return alert("⚠️ 이벤트 참여 및 경품 발송을 위해 모든 항목을 입력해야 등불을 띄울 수 있습니다!");
+                return alert("⚠️ 당첨자 정보를 포함한 모든 항목을 입력해야 등불을 띄울 수 있습니다!");
             }
-            // 동의 체크 검사 강화
             if(!agree) {
                 return alert("⚠️ 개인정보 수집 및 이용 안내에 동의해 주세요!");
             }
 
-            const data = { nickname, message, password, region, school, realName, phone, likes: 0, createdAt: new Date() };
-
             try {
-                await addDoc(colRef, data);
-                localStorage.setItem('registered_2026', 'true');
+                await addDoc(colRef, { nickname, message, password, region, school, realName, phone, likes: 0, createdAt: new Date() });
+                localStorage.setItem('registered_2026', 'true'); // 성공 시에만 마킹
                 document.getElementById('charm-message').innerText = getWeightedFortune();
                 document.getElementById('charm-modal').style.display = 'flex';
             } catch (e) {
@@ -237,14 +229,16 @@
             setTimeout(() => card.classList.remove('like-animation'), 500);
         };
 
+        // 🛠️ 운영 핵심: 삭제 시 로컬 참여 기록 확실히 초기화
         window.deletePost = async (id, correctPw) => {
-            const pw = prompt("삭제 비밀번호를 입력해 주세요.");
-            if (pw === String(correctPw)) {
+            const pw = prompt("비밀번호를 입력해 주세요.");
+            if (pw === String(correctPw) || pw === "admin2026") { // 관리자 비밀번호로도 삭제 가능
                 if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 다시 참여하실 수 있습니다.")) {
                     try {
                         await deleteDoc(doc(db, "greetings", id));
-                        localStorage.removeItem('registered_2026'); 
+                        localStorage.removeItem('registered_2026'); // 성공 즉시 로컬 기록 삭제
                         alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다!");
+                        location.reload(); // 확실한 상태 갱신을 위해 새로고침
                     } catch (e) {
                         alert("오류가 발생했습니다.");
                     }
