@@ -132,7 +132,7 @@
                 "일취월장(日就月將), 전문성이 폭발하는 해!\n새로운 연수나 연구 활동에서 최고의 성과를 거두며, 동료들에게 귀감이 되는 '갓선생님'으로 거듭납니다. 선생님의 가치가 증명되는 해가 될 거예요.",
                 "전도유망(前途有望), 밝은 미래가 열립니다.\n신학기 배정부터 학급 구성까지, 모든 운이 선생님 편입니다. 어떤 도전도 성공으로 이어지며, 일 년 내내 웃음 끊이지 않는 교실이 됩니다."
             ],
-            medium: [ // 25% - medium_base.jpg (꽃무늬)
+            medium: [ // 25% - medium_base.png (꽃무늬)
                 "올해는 '칼퇴 요정'이 선생님 곁을 지킵니다.\n공문 처리가 빛의 속도로 해결되고, 매일 저녁 온전한 휴식 시간이 보장되는 기적 같은 업무운이 따릅니다.",
                 "동료 선생님들과의 찰떡궁합 팀워크!\n마음 맞는 옆 반 선생님 덕분에 힘든 일도 웃으며 넘길 수 있습니다. 든든한 동료애 속에서 교직의 즐거움을 다시 발견합니다.",
                 "학부모님들의 깊은 신뢰와 지지.\n선생님의 교육 철학을 지지해주는 든든한 학부모님들 덕분에, 상담 시간이 기다려지는 마법 같은 소통의 운이 들어와 있습니다.",
@@ -197,7 +197,7 @@
                 const random = Math.random();
                 let selected, img;
                 if (random < 0.1) { selected = fortunes.rare; img = 'rare_base.png'; }
-                else if (random < 0.35) { selected = fortunes.medium; img = 'medium_base.jpg'; }
+                else if (random < 0.35) { selected = fortunes.medium; img = 'medium_base.png'; }
                 else { selected = fortunes.common; img = 'common_base.png'; }
                 
                 document.getElementById('charm-message').innerText = selected[Math.floor(Math.random() * selected.length)];
@@ -299,3 +299,4 @@
     </script>
 </body>
 </html>
+
