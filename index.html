@@ -22,38 +22,12 @@
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .like-animation { animation: heartBeat 0.4s ease-in-out; }
 
-        /* 🧧 부적 팝업 및 고화질 캡처 설정 */
         #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
         .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
         
-        /* 방법 1: img 태그를 활용한 캡처 영역 */
-        #charm-capture { 
-            width: 300px; 
-            position: relative; 
-            margin: 0 auto 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            background-color: #fff;
-        }
-        #charm-bg-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .charm-text { 
-            position: absolute; 
-            top: 48%; /* 이미지 비율에 따라 조정 가능 */
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            width: 85%; 
-            text-align: center; 
-            color: #c0392b; 
-            font-weight: 900; 
-            font-size: 1.4rem; 
-            line-height: 1.6; 
-            word-break: keep-all;
-            pointer-events: none;
-        }
+        #charm-capture { width: 300px; position: relative; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; background-color: #fff; }
+        #charm-bg-img { width: 100%; height: auto; display: block; }
+        .charm-text { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); width: 85%; text-align: center; color: #c0392b; font-weight: 900; font-size: 1.4rem; line-height: 1.6; word-break: keep-all; pointer-events: none; }
 
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
@@ -118,7 +92,7 @@
     </div>
 
     <div class="text-center py-16 opacity-30 hover:opacity-100 transition-opacity">
-        <button onclick="downloadCSV()" class="text-[10px] text-gray-400 underline">Admin Data Export</button>
+        <button onclick="downloadCSV()" class="text-[10px] text-gray-400 underline mr-4">Admin Data Export</button>
     </div>
 
     <script type="module">
@@ -139,13 +113,32 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        const fortuneMessages = [
-            "만사형통:\n하는 일마다 술술 풀릴 것입니다.",
-            "운수대통:\n생각지 못한 큰 복이 굴러옵니다.",
-            "금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.",
-            "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.",
-            "일취월장:\n당신의 재능이 빛을 발할 것입니다."
-        ];
+        // 🎰 확률 기반 운세 데이터 설정
+        const fortunes = {
+            rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"], // 10%
+            medium: [
+                "만사형통:\n하는 일마다 술술 풀릴 것입니다.",
+                "운수대통:\n생각지 못한 큰 복이 굴러옵니다."
+            ], // 25% (합계)
+            common: [
+                "금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.",
+                "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.",
+                "일취월장:\n당신의 재능이 빛을 발할 것입니다.",
+                "가화만사성:\n가정에 웃음꽃이 끊이지 않습니다."
+            ] // 65% (합계)
+        };
+
+        // 가중치 랜덤 선택 함수
+        function getWeightedFortune() {
+            const random = Math.random(); // 0~1 사이 소수
+            let selectedCategory;
+            
+            if (random < 0.1) selectedCategory = fortunes.rare;      // 10%
+            else if (random < 0.35) selectedCategory = fortunes.medium; // 25% (0.1 + 0.25)
+            else selectedCategory = fortunes.common;                 // 65% (나머지)
+
+            return selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+        }
 
         function createStars() {
             const container = document.getElementById('star-container');
@@ -189,7 +182,9 @@
 
             await addDoc(colRef, data);
             localStorage.setItem('registered_2026', 'true');
-            document.getElementById('charm-message').innerText = fortuneMessages[Math.floor(Math.random() * fortuneMessages.length)];
+            
+            // 확률 기반 운세 결정
+            document.getElementById('charm-message').innerText = getWeightedFortune();
             document.getElementById('charm-modal').style.display = 'flex';
         };
 
@@ -231,18 +226,17 @@
         window.deletePost = async (id, correctPw) => {
             const pw = prompt("삭제 비밀번호를 입력해 주세요.");
             if (pw === String(correctPw)) {
-                if (confirm("정말로 이 등불을 끄시겠습니까?")) await deleteDoc(doc(db, "greetings", id));
+                if (confirm("정말로 이 등불을 끄시겠습니까?")) {
+                    await deleteDoc(doc(db, "greetings", id));
+                    localStorage.removeItem('registered_2026'); // 삭제 시 권한 복구
+                    alert("등불이 내려갔습니다. 다시 참여하실 수 있습니다.");
+                }
             } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
         };
 
         window.downloadCharm = () => {
             const target = document.querySelector("#charm-capture");
-            html2canvas(target, {
-                scale: 4, // 초고화질 캡처
-                useCORS: true, 
-                backgroundColor: null,
-                logging: false
-            }).then(canvas => {
+            html2canvas(target, { scale: 4, useCORS: true, backgroundColor: null }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `2026_행운부적_${Date.now()}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
