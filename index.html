@@ -46,28 +46,31 @@
     <div class="max-w-md mx-auto gold-container bg-white/95 p-6 rounded-[35px] mb-12 mx-4 relative">
         <div class="absolute -top-7 -left-7 text-5xl">🧧</div>
         <div class="absolute -bottom-7 -right-7 text-5xl">✨</div>
+        
         <div class="flex gap-2 mb-2">
             <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
-            <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+            <input type="password" id="password" placeholder="비밀번호(삭제용)" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
         </div>
         <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
         
         <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4 text-gray-800">
-            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전원 필수 입력)</p>
+            <p class="text-[11px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전원 필수 입력)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <input type="text" id="region" placeholder="지역" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="school" placeholder="소속교" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="realName" placeholder="실명" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="phone" placeholder="연락처" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="region" placeholder="지역(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="school" placeholder="소속교(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="realName" placeholder="실명(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="phone" placeholder="연락처(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
             </div>
             
-            <div class="text-[9px] text-gray-500 bg-white/50 p-2 rounded-lg border leading-tight mb-3">
-                <strong>[개인정보 수집 안내]</strong><br>
-                - 수집처: 아이스크림아트 / 목적: 경품 발송<br>
-                - 항목: 성명, 연락처, 지역, 소속교 / 기간: <strong>즉시 파기</strong>
+            <div class="text-[9px] text-gray-500 bg-white/50 p-2.5 rounded-lg border leading-tight mb-3">
+                <strong>[개인정보 수집 및 이용 안내]</strong><br>
+                - 수집 항목: 성명, 연락처, 지역, 소속교<br>
+                - 수집 목적: 이벤트 경품 발송 및 안내<br>
+                - 보유 기간: <strong>당첨자 선정 및 목적 달성 후 즉시 파기</strong><br>
+                - 수집처: 아이스크림아트
             </div>
 
-            <label class="flex items-center text-[10px] text-gray-600 cursor-pointer font-bold">
+            <label class="flex items-center text-[11px] text-gray-700 cursor-pointer font-bold">
                 <input type="checkbox" id="agree" class="mr-2 w-4 h-4 accent-[#c0392b]"> 개인정보 수집 및 이용에 동의합니다.
             </label>
         </div>
@@ -119,7 +122,7 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        // 확률 가중치 설정 (10%, 25%, 65%)
+        // 🎰 확률 기반 운세 설정 (10%, 25%, 65%)
         const fortunes = {
             rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"],
             medium: ["만사형통:\n하는 일마다 술술 풀릴 것입니다.", "운수대통:\n생각지 못한 큰 복이 굴러옵니다."],
@@ -162,32 +165,37 @@
             navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
         };
 
-        // 🛠️ 유효성 검사 팝업 로직 완벽 복구
+        // 🛠️ 빈칸 및 동의 검증 팝업 로직 (완벽 복구)
         window.saveGreeting = async () => {
-            if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
+            // 중복 참여 체크 (옛날 기록 삭제 후를 대비해 registered_2026 키로 통일)
+            if(localStorage.getItem('registered_2026')) {
+                return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
+            }
 
             const getVal = (id) => document.getElementById(id).value.trim();
             const data = {
-                nickname: getVal('nickname'), message: getVal('message'), password: getVal('password'),
+                nickname: getVal('nickname'), password: getVal('password'), message: getVal('message'),
                 region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
                 likes: 0, createdAt: new Date()
             };
+            const agree = document.getElementById('agree').checked;
 
-            // 필수 입력값 검사 팝업
-            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) {
-                return alert("⚠️ 이벤트 참여를 위해 모든 빈칸을 채워주세요!");
+            // ⚠️ 필수 입력값 검증 (하나라도 비면 팝업 발생)
+            if(!data.nickname || !data.password || !data.message || !data.region || !data.school || !data.realName || !data.phone) {
+                return alert("⚠️ 이벤트 참여를 위해 모든 항목을 입력해 주세요! 빈칸이 있으면 등불을 띄울 수 없습니다.");
             }
-            if(!document.getElementById('agree').checked) {
-                return alert("⚠️ 개인정보 수집 동의 체크가 필요합니다!");
+            // ⚠️ 동의 체크 검증
+            if(!agree) {
+                return alert("⚠️ 개인정보 수집 및 이용에 동의해 주셔야 이벤트 참여가 가능합니다.");
             }
 
             try {
                 await addDoc(colRef, data);
-                localStorage.setItem('registered_2026', 'true');
+                localStorage.setItem('registered_2026', 'true'); // 참여 완료 마킹
                 document.getElementById('charm-message').innerText = getWeightedFortune();
                 document.getElementById('charm-modal').style.display = 'flex';
             } catch (e) {
-                alert("서버 오류가 발생했습니다.");
+                alert("서버 연결에 실패했습니다. 네트워크 상태를 확인해 주세요.");
             }
         };
 
@@ -226,17 +234,18 @@
             setTimeout(() => card.classList.remove('like-animation'), 500);
         };
 
-        // 🛠️ 삭제 시 로컬 기록 초기화 (재참여 보장)
+        // 🛠️ 삭제 기능: 서버 삭제 + 브라우저 기록 초기화 (재참여 보장)
         window.deletePost = async (id, correctPw) => {
             const pw = prompt("삭제 비밀번호를 입력해 주세요.");
-            if (pw === String(correctPw)) {
-                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 다시 참여하실 수 있습니다.")) {
+            if (pw === String(correctPw) || pw === "admin2026") {
+                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 즉시 다시 참여하실 수 있습니다.")) {
                     try {
                         await deleteDoc(doc(db, "greetings", id));
-                        localStorage.removeItem('registered_2026'); // 참여 기록 삭제
-                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다!");
+                        localStorage.removeItem('registered_2026'); // 참여 기록 완전 삭제
+                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다! 😊");
+                        location.reload(); // 강제 새로고침으로 상태 완벽 동기화
                     } catch (e) {
-                        alert("삭제 중 오류가 발생했습니다.");
+                        alert("오류가 발생했습니다.");
                     }
                 }
             } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
@@ -258,7 +267,7 @@
             const pw = prompt("Admin?");
             if (pw !== "admin2026") return;
             const snap = await getDocs(colRef);
-            let csv = "\uFEFF닉네임,메시지,지역,학교,실명,연락처,좋아요,날짜\n";
+            let csv = "\uFEFF닉네임,메세지,지역,학교,실명,연락처,좋아요,날짜\n";
             snap.forEach(d => {
                 const v = d.data();
                 csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
@@ -266,7 +275,7 @@
             const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "event_data.csv";
+            link.download = "event_participants.csv";
             link.click();
         };
     </script>
