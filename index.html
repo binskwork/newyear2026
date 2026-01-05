@@ -113,31 +113,18 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        // 🎰 확률 기반 운세 데이터 설정
+        // 🎰 확률 가중치 설정
         const fortunes = {
             rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"], // 10%
-            medium: [
-                "만사형통:\n하는 일마다 술술 풀릴 것입니다.",
-                "운수대통:\n생각지 못한 큰 복이 굴러옵니다."
-            ], // 25% (합계)
-            common: [
-                "금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.",
-                "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.",
-                "일취월장:\n당신의 재능이 빛을 발할 것입니다.",
-                "가화만사성:\n가정에 웃음꽃이 끊이지 않습니다."
-            ] // 65% (합계)
+            medium: ["만사형통:\n하는 일마다 술술 풀릴 것입니다.", "운수대통:\n생각지 못한 큰 복이 굴러옵니다."], // 25%
+            common: ["금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.", "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.", "일취월장:\n당신의 재능이 빛을 발할 것입니다."] // 65%
         };
 
-        // 가중치 랜덤 선택 함수
         function getWeightedFortune() {
-            const random = Math.random(); // 0~1 사이 소수
-            let selectedCategory;
-            
-            if (random < 0.1) selectedCategory = fortunes.rare;      // 10%
-            else if (random < 0.35) selectedCategory = fortunes.medium; // 25% (0.1 + 0.25)
-            else selectedCategory = fortunes.common;                 // 65% (나머지)
-
-            return selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+            const random = Math.random();
+            if (random < 0.1) return fortunes.rare[0];
+            else if (random < 0.35) return fortunes.medium[Math.floor(Math.random() * fortunes.medium.length)];
+            else return fortunes.common[Math.floor(Math.random() * fortunes.common.length)];
         }
 
         function createStars() {
@@ -182,8 +169,6 @@
 
             await addDoc(colRef, data);
             localStorage.setItem('registered_2026', 'true');
-            
-            // 확률 기반 운세 결정
             document.getElementById('charm-message').innerText = getWeightedFortune();
             document.getElementById('charm-modal').style.display = 'flex';
         };
@@ -223,13 +208,273 @@
             setTimeout(() => card.classList.remove('like-animation'), 500);
         };
 
+        // 🛠️ 운영 이슈 해결: 삭제 시 로컬 참여 기록 초기화
         window.deletePost = async (id, correctPw) => {
             const pw = prompt("삭제 비밀번호를 입력해 주세요.");
             if (pw === String(correctPw)) {
-                if (confirm("정말로 이 등불을 끄시겠습니까?")) {
-                    await deleteDoc(doc(db, "greetings", id));
-                    localStorage.removeItem('registered_2026'); // 삭제 시 권한 복구
-                    alert("등불이 내려갔습니다. 다시 참여하실 수 있습니다.");
+                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 다시 참여하실 수 있습니다.")) {
+                    try {
+                        await deleteDoc(doc(db, "greetings", id));
+                        localStorage.removeItem('registered_2026'); // 참여 플래그 제거
+                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다!");
+                    } catch (e) {
+                        alert("오류가 발생했습니다.");
+                    }
+                }
+            } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
+        };
+
+        window.downloadCharm = () => {
+            const target = document.querySelector("#charm-capture");
+            html2canvas(target, { scale: 4, useCORS: true, backgroundColor: null }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `2026_행운부적_${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+            });
+        };
+
+        window.closeModal = () => { location.reload(); };
+
+        window.downloadCSV = async () => {
+            const pw = prompt("Admin?");
+            if (pw !== "admin2026") return;
+            const snap = await getDocs(colRef);
+            let csv = "\uFEFF닉네임,메시지,지역,학교,실명,연락처,좋아요,날짜\n";
+            snap.forEach(d => {
+                const v = d.data();
+                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
+            });
+            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "event_participants_data.csv";
+            link.click();
+        };
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 새해 덕담 등불 띄우기 🏮</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: "Pretendard", sans-serif; overflow-x: hidden; min-height: 100vh; transition: background 1s ease; }
+        .day-theme { background: radial-gradient(circle at top, #fff5f5 0%, #fffaf0 100%); color: #2d3436; }
+        .night-theme { background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%); color: #f8f9fa; }
+        .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
+        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
+        
+        .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
+        .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
+        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        .like-animation { animation: heartBeat 0.4s ease-in-out; }
+
+        #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
+        .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
+        
+        #charm-capture { width: 300px; position: relative; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; background-color: #fff; }
+        #charm-bg-img { width: 100%; height: auto; display: block; }
+        .charm-text { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); width: 85%; text-align: center; color: #c0392b; font-weight: 900; font-size: 1.4rem; line-height: 1.6; word-break: keep-all; pointer-events: none; }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="day-theme">
+    <div id="star-container"></div>
+
+    <header class="text-center pt-8 pb-3 relative z-10">
+        <h1 class="text-xl md:text-3xl font-extrabold text-[#c0392b] mb-1 flex justify-center items-center gap-2" id="main-title">
+            <span>🏮</span> 2026 새해 덕담 등불 띄우기 <span>🏮</span>
+        </h1>
+        <p class="text-xs md:text-sm text-[#d4af37] font-semibold">서로의 앞날을 비추는 따뜻한 덕담 한마디</p>
+        <button onclick="shareLink()" class="mt-3 px-5 py-2 bg-white/80 border border-[#d4af37] text-[#c0392b] rounded-full text-[11px] font-bold shadow-md">🔗 이벤트 링크 복사하기</button>
+    </header>
+
+    <div class="max-w-md mx-auto gold-container bg-white/95 p-6 rounded-[35px] mb-12 mx-4 relative">
+        <div class="absolute -top-7 -left-7 text-5xl">🧧</div>
+        <div class="absolute -bottom-7 -right-7 text-5xl">✨</div>
+        <div class="flex gap-2 mb-2">
+            <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+            <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+        </div>
+        <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
+        
+        <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4 text-gray-800">
+            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전부 기입 필수)</p>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <input type="text" id="region" placeholder="지역" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="school" placeholder="소속교" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="realName" placeholder="실명" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="phone" placeholder="연락처" class="p-2 border rounded-lg text-[11px] bg-white">
+            </div>
+            <label class="flex items-center text-[10px] text-gray-600 cursor-pointer font-bold">
+                <input type="checkbox" id="agree" class="mr-2 w-4 h-4 accent-[#c0392b]"> 개인정보 수집 및 이용에 동의합니다.
+            </label>
+        </div>
+        <button onclick="saveGreeting()" class="w-full bg-[#c0392b] text-white py-3.5 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all">덕담 등불 올리기 ❤️</button>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 mb-10 relative z-10">
+        <h2 class="text-[#d4af37] font-bold text-center mb-5 flex items-center justify-center gap-2">
+            <span>✨</span> 명예의 덕담 (TOP 10) <span>✨</span>
+        </h2>
+        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide"></div>
+    </div>
+
+    <div id="greeting-list" class="card-grid max-w-6xl mx-auto"></div>
+
+    <div id="charm-modal">
+        <div class="charm-container shadow-2xl">
+            <h3 class="text-xl font-bold text-[#c0392b] mb-4">나의 2026 행운 부적</h3>
+            <div id="charm-capture">
+                <img src="charm_base.png" id="charm-bg-img" alt="부적 배경">
+                <p id="charm-message" class="charm-text"></p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="downloadCharm()" class="flex-1 bg-[#d4af37] text-white py-4 rounded-2xl font-bold text-sm shadow-md">고화질 저장</button>
+                <button onclick="closeModal()" class="flex-1 bg-gray-100 text-gray-500 py-4 rounded-2xl font-bold text-sm">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center py-16 opacity-30 hover:opacity-100 transition-opacity">
+        <button onclick="downloadCSV()" class="text-[10px] text-gray-400 underline mr-4">Admin Data Export</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2cUrJBWa8DnZ10yTbSNkdVvHgNd5XkIc",
+            authDomain: "new-year-pj-94d18.firebaseapp.com",
+            projectId: "new-year-pj-94d18",
+            storageBucket: "new-year-pj-94d18.firebasestorage.app",
+            messagingSenderId: "100527886802",
+            appId: "1:100527886802:web:ad7c8f1f9298915b90780b",
+            measurementId: "G-VZY04YTW61"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const colRef = collection(db, "greetings");
+
+        // 🎰 확률 가중치 설정
+        const fortunes = {
+            rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"], // 10%
+            medium: ["만사형통:\n하는 일마다 술술 풀릴 것입니다.", "운수대통:\n생각지 못한 큰 복이 굴러옵니다."], // 25%
+            common: ["금상첨화:\n좋은 일에 더 좋은 일이 겹칩니다.", "무사태평:\n올 한 해 걱정 없이 평안할 것입니다.", "일취월장:\n당신의 재능이 빛을 발할 것입니다."] // 65%
+        };
+
+        function getWeightedFortune() {
+            const random = Math.random();
+            if (random < 0.1) return fortunes.rare[0];
+            else if (random < 0.35) return fortunes.medium[Math.floor(Math.random() * fortunes.medium.length)];
+            else return fortunes.common[Math.floor(Math.random() * fortunes.common.length)];
+        }
+
+        function createStars() {
+            const container = document.getElementById('star-container');
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 2 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * -100 + 'vh';
+                star.style.animationDuration = Math.random() * 10 + 5 + 's';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        const updateTheme = () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) {
+                document.body.classList.replace('day-theme', 'night-theme');
+                document.getElementById('main-title').classList.replace('text-[#c0392b]', 'text-[#ffcc00]');
+            }
+        };
+        updateTheme();
+
+        window.shareLink = () => {
+            navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
+        };
+
+        window.saveGreeting = async () => {
+            if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
+            const getVal = (id) => document.getElementById(id).value.trim();
+            const data = {
+                nickname: getVal('nickname'), message: getVal('message'), password: getVal('password'),
+                region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
+                likes: 0, createdAt: new Date()
+            };
+            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) return alert("⚠️ 모든 항목을 빠짐없이 입력해 주세요!");
+            if(!document.getElementById('agree').checked) return alert("⚠️ 개인정보 수집 동의가 필요합니다!");
+
+            await addDoc(colRef, data);
+            localStorage.setItem('registered_2026', 'true');
+            document.getElementById('charm-message').innerText = getWeightedFortune();
+            document.getElementById('charm-modal').style.display = 'flex';
+        };
+
+        onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
+            const hList = document.getElementById('honor-list');
+            const gList = document.getElementById('greeting-list');
+            hList.innerHTML = ''; gList.innerHTML = '';
+            let count = 0;
+            snapshot.forEach((docSnap) => {
+                const item = docSnap.data();
+                const id = docSnap.id;
+                const cardHtml = `
+                    <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg relative">
+                        ${count < 10 ? `<span class="absolute -top-3 -left-2 bg-[#d4af37] text-white text-[10px] px-2 py-1 rounded-full font-bold shadow-sm">TOP ${count+1}</span>` : ''}
+                        <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold z-30">✕</button>
+                        <div>
+                            <p class="text-[10px] text-[#c0392b] font-bold mb-1">@${item.nickname}</p>
+                            <p class="text-gray-800 text-[14px] leading-relaxed font-medium line-clamp-3">${item.message}</p>
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-3 mt-2">
+                            <button onclick="window.likePost('${id}')" class="text-red-500 font-bold text-xs hover:scale-110 transition-transform">❤️ <span>${item.likes}</span></button>
+                            <span class="text-[9px] text-gray-400 font-light">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
+                        </div>
+                    </div>`;
+                if(count < 10) hList.innerHTML += cardHtml; else gList.innerHTML += cardHtml;
+                count++;
+            });
+        });
+
+        window.likePost = async (id) => {
+            if(localStorage.getItem('voted_2026_'+id)) return alert("이미 응원해주신 덕담입니다! ❤️");
+            const card = document.getElementById('card-' + id);
+            card.classList.add('like-animation');
+            await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
+            localStorage.setItem('voted_2026_'+id, true);
+            setTimeout(() => card.classList.remove('like-animation'), 500);
+        };
+
+        // 🛠️ 운영 이슈 해결: 삭제 시 로컬 참여 기록 초기화
+        window.deletePost = async (id, correctPw) => {
+            const pw = prompt("삭제 비밀번호를 입력해 주세요.");
+            if (pw === String(correctPw)) {
+                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 다시 참여하실 수 있습니다.")) {
+                    try {
+                        await deleteDoc(doc(db, "greetings", id));
+                        localStorage.removeItem('registered_2026'); // 참여 플래그 제거
+                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다!");
+                    } catch (e) {
+                        alert("오류가 발생했습니다.");
+                    }
                 }
             } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
         };
