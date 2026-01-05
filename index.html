@@ -16,8 +16,8 @@
         
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
         .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
-        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
-        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); position: relative; } /* relative 추가 */
+        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; } /* relative 추가 */
         
         @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
         .like-animation { animation: heartBeat 0.4s ease-in-out; }
@@ -81,8 +81,7 @@
         <h2 class="text-[#d4af37] font-bold text-center mb-5 flex items-center justify-center gap-2">
             <span>✨</span> 명예의 덕담 (TOP 10) <span>✨</span>
         </h2>
-        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide"></div>
-    </div>
+        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide p-2"></div> </div>
 
     <div id="greeting-list" class="card-grid max-w-6xl mx-auto"></div>
 
@@ -122,7 +121,6 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        // 🎰 확률 기반 운세 설정 (10%, 25%, 65%)
         const fortunes = {
             rare: ["용의 기운을 담은:\n2026년 우주 최강의 행운이 깃듭니다!"],
             medium: ["만사형통:\n하는 일마다 술술 풀릴 것입니다.", "운수대통:\n생각지 못한 큰 복이 굴러옵니다."],
@@ -165,9 +163,7 @@
             navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
         };
 
-        // 🛠️ 빈칸 및 동의 검증 팝업 로직 (완벽 복구)
         window.saveGreeting = async () => {
-            // 중복 참여 체크 (옛날 기록 삭제 후를 대비해 registered_2026 키로 통일)
             if(localStorage.getItem('registered_2026')) {
                 return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
             }
@@ -176,108 +172,4 @@
             const data = {
                 nickname: getVal('nickname'), password: getVal('password'), message: getVal('message'),
                 region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
-                likes: 0, createdAt: new Date()
-            };
-            const agree = document.getElementById('agree').checked;
-
-            // ⚠️ 필수 입력값 검증 (하나라도 비면 팝업 발생)
-            if(!data.nickname || !data.password || !data.message || !data.region || !data.school || !data.realName || !data.phone) {
-                return alert("⚠️ 이벤트 참여를 위해 모든 항목을 입력해 주세요! 빈칸이 있으면 등불을 띄울 수 없습니다.");
-            }
-            // ⚠️ 동의 체크 검증
-            if(!agree) {
-                return alert("⚠️ 개인정보 수집 및 이용에 동의해 주셔야 이벤트 참여가 가능합니다.");
-            }
-
-            try {
-                await addDoc(colRef, data);
-                localStorage.setItem('registered_2026', 'true'); // 참여 완료 마킹
-                document.getElementById('charm-message').innerText = getWeightedFortune();
-                document.getElementById('charm-modal').style.display = 'flex';
-            } catch (e) {
-                alert("서버 연결에 실패했습니다. 네트워크 상태를 확인해 주세요.");
-            }
-        };
-
-        onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
-            const hList = document.getElementById('honor-list');
-            const gList = document.getElementById('greeting-list');
-            hList.innerHTML = ''; gList.innerHTML = '';
-            let count = 0;
-            snapshot.forEach((docSnap) => {
-                const item = docSnap.data();
-                const id = docSnap.id;
-                const cardHtml = `
-                    <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg relative">
-                        ${count < 10 ? `<span class="absolute -top-3 -left-2 bg-[#d4af37] text-white text-[10px] px-2 py-1 rounded-full font-bold shadow-sm">TOP ${count+1}</span>` : ''}
-                        <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold z-30">✕</button>
-                        <div>
-                            <p class="text-[10px] text-[#c0392b] font-bold mb-1">@${item.nickname}</p>
-                            <p class="text-gray-800 text-[14px] leading-relaxed font-medium line-clamp-3">${item.message}</p>
-                        </div>
-                        <div class="flex justify-between items-center border-t pt-3 mt-2">
-                            <button onclick="window.likePost('${id}')" class="text-red-500 font-bold text-xs hover:scale-110 transition-transform">❤️ <span>${item.likes}</span></button>
-                            <span class="text-[9px] text-gray-400 font-light">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
-                        </div>
-                    </div>`;
-                if(count < 10) hList.innerHTML += cardHtml; else gList.innerHTML += cardHtml;
-                count++;
-            });
-        });
-
-        window.likePost = async (id) => {
-            if(localStorage.getItem('voted_2026_'+id)) return alert("이미 응원해주신 덕담입니다! ❤️");
-            const card = document.getElementById('card-' + id);
-            card.classList.add('like-animation');
-            await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
-            localStorage.setItem('voted_2026_'+id, true);
-            setTimeout(() => card.classList.remove('like-animation'), 500);
-        };
-
-        // 🛠️ 삭제 기능: 서버 삭제 + 브라우저 기록 초기화 (재참여 보장)
-        window.deletePost = async (id, correctPw) => {
-            const pw = prompt("삭제 비밀번호를 입력해 주세요.");
-            if (pw === String(correctPw) || pw === "admin2026") {
-                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 즉시 다시 참여하실 수 있습니다.")) {
-                    try {
-                        await deleteDoc(doc(db, "greetings", id));
-                        localStorage.removeItem('registered_2026'); // 참여 기록 완전 삭제
-                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다! 😊");
-                        location.reload(); // 강제 새로고침으로 상태 완벽 동기화
-                    } catch (e) {
-                        alert("오류가 발생했습니다.");
-                    }
-                }
-            } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
-        };
-
-        window.downloadCharm = () => {
-            const target = document.querySelector("#charm-capture");
-            html2canvas(target, { scale: 4, useCORS: true, backgroundColor: null }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `2026_행운부적_${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.click();
-            });
-        };
-
-        window.closeModal = () => { location.reload(); };
-
-        window.downloadCSV = async () => {
-            const pw = prompt("Admin?");
-            if (pw !== "admin2026") return;
-            const snap = await getDocs(colRef);
-            let csv = "\uFEFF닉네임,메세지,지역,학교,실명,연락처,좋아요,날짜\n";
-            snap.forEach(d => {
-                const v = d.data();
-                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
-            });
-            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "event_participants.csv";
-            link.click();
-        };
-    </script>
-</body>
-</html>
+                likes: 0, createdAt
