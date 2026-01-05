@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 새해 덕담 등불 띄우기 🏮</title>
+    <title>2026 선생님 덕담 등불 띄우기 🏮</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -14,19 +14,22 @@
         .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
         
+        /* 카드 디자인 */
         .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
         .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
-        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); position: relative; }
-        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; }
+        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
-        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-        .like-animation { animation: heartBeat 0.4s ease-in-out; }
+        /* 🛠️ TOP 배지 디자인 수정 (닉네임 안 가리게) */
+        .top-badge { position: absolute; top: -12px; left: 15px; background: #d4af37; color: white; padding: 2px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 40; }
 
         #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
         .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
+        
+        /* 부적 이미지 영역 */
         #charm-capture { width: 300px; position: relative; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; background-color: #fff; }
         #charm-bg-img { width: 100%; height: auto; display: block; }
-        .charm-text { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); width: 85%; text-align: center; color: #c0392b; font-weight: 900; font-size: 1.4rem; line-height: 1.6; word-break: keep-all; pointer-events: none; }
+        .charm-text { position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%); width: 85%; text-align: center; color: #c0392b; font-weight: 900; font-size: 1.3rem; line-height: 1.6; word-break: keep-all; pointer-events: none; }
 
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
@@ -37,16 +40,15 @@
 
     <header class="text-center pt-8 pb-3 relative z-10">
         <h1 class="text-xl md:text-3xl font-extrabold text-[#c0392b] mb-1 flex justify-center items-center gap-2" id="main-title">
-            <span>🏮</span> 2026 새해 덕담 등불 띄우기 <span>🏮</span>
+            <span>🏮</span> 2026 선생님 덕담 등불 띄우기 <span>🏮</span>
         </h1>
-        <p class="text-xs md:text-sm text-[#d4af37] font-semibold">서로의 앞날을 비추는 따뜻한 덕담 한마디</p>
+        <p class="text-xs md:text-sm text-[#d4af37] font-semibold">신학기, 선생님의 앞날을 비추는 따뜻한 한마디</p>
         <button onclick="shareLink()" class="mt-3 px-5 py-2 bg-white/80 border border-[#d4af37] text-[#c0392b] rounded-full text-[11px] font-bold shadow-md">🔗 이벤트 링크 복사하기</button>
     </header>
 
     <div class="max-w-md mx-auto gold-container bg-white/95 p-6 rounded-[35px] mb-12 mx-4 relative">
         <div class="absolute -top-7 -left-7 text-5xl">🧧</div>
         <div class="absolute -bottom-7 -right-7 text-5xl">✨</div>
-        
         <div class="flex gap-2 mb-2">
             <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
             <input type="password" id="password" placeholder="비밀번호(삭제용)" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
@@ -54,23 +56,17 @@
         <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
         
         <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4 text-gray-800">
-            <p class="text-[11px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전원 필수 입력)</p>
+            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전원 필수 입력)</p>
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <input type="text" id="region" placeholder="지역(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
-                <input type="text" id="school" placeholder="소속교(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
-                <input type="text" id="realName" placeholder="실명(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
-                <input type="text" id="phone" placeholder="연락처(필수)" class="p-2 border rounded-lg text-[11px] bg-white text-gray-800">
+                <input type="text" id="region" placeholder="지역(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="school" placeholder="소속교(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="realName" placeholder="실명(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
+                <input type="text" id="phone" placeholder="연락처(필수)" class="p-2 border rounded-lg text-[11px] bg-white">
             </div>
-            
-            <div class="text-[9px] text-gray-500 bg-white/50 p-2.5 rounded-lg border leading-tight mb-3">
-                <strong>[개인정보 수집 및 이용 안내]</strong><br>
-                - 수집 항목: 성명, 연락처, 지역, 소속교<br>
-                - 수집 목적: 이벤트 경품 발송 및 안내<br>
-                - 보유 기간: <strong>당첨자 선정 및 목적 달성 후 즉시 파기</strong><br>
-                - 수집처: 아이스크림아트
+            <div class="text-[9px] text-gray-500 bg-white/50 p-2 rounded-lg border leading-tight mb-3">
+                [개인정보 수집 안내] 수집처: 아이스크림아트 / 목적: 경품 발송 및 안내 / 기간: 목적 달성 후 즉시 파기
             </div>
-
-            <label class="flex items-center text-[11px] text-gray-700 cursor-pointer font-bold">
+            <label class="flex items-center text-[10px] text-gray-600 cursor-pointer font-bold">
                 <input type="checkbox" id="agree" class="mr-2 w-4 h-4 accent-[#c0392b]"> 개인정보 수집 및 이용에 동의합니다.
             </label>
         </div>
@@ -81,7 +77,7 @@
         <h2 class="text-[#d4af37] font-bold text-center mb-5 flex items-center justify-center gap-2">
             <span>✨</span> 명예의 덕담 (TOP 10) <span>✨</span>
         </h2>
-        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide p-2"></div>
+        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide"></div>
     </div>
 
     <div id="greeting-list" class="card-grid max-w-6xl mx-auto"></div>
@@ -122,86 +118,85 @@
         const db = getFirestore(app);
         const colRef = collection(db, "greetings");
 
-        // 🎰 등급별 운세 데이터 (메시지 + 이미지 파일명)
-        // *** 중요: 아래 이미지 파일명(rare_base.png 등)을 실제 업로드한 파일명과 똑같이 맞춰주세요! ***
+        // 🎰 확률 기반 운세 데이터 (희귀 10, 중간 20, 일반 30)
         const fortunes = {
-            rare: [ // 희귀 (10%) - 10개
-                {msg: "마른하늘에 날벼락...처럼 쏟아지는 행운! 2026년 대박 나세요!", img: "rare_base.png"},
-                {msg: "가뭄에 단비 내리듯, 기다리던 기쁜 소식이 찾아옵니다.", img: "rare_base.png"},
-                {msg: "고진감래(苦盡甘來): 고생 끝에 낙이 온다! 그동안의 노력이 빛을 발할 거예요.", img: "rare_base.png"},
-                {msg: "금의환향(錦衣還鄕): 비단옷 입고 고향에 돌아오듯, 큰 성공을 거두게 됩니다.", img: "rare_base.png"},
-                {msg: "만사형통(萬事亨通): 모든 일이 뜻대로 술술 풀리는 최고의 한 해가 될 것입니다.", img: "rare_base.png"},
-                {msg: "무병장수(無病長壽): 아픈 곳 없이 건강하고 활기찬 2026년을 기원합니다!", img: "rare_base.png"},
-                {msg: "소원성취(所願成就): 마음속에 품었던 간절한 소원이 드디어 이루어집니다.", img: "rare_base.png"},
-                {msg: "일취월장(日就月將): 나날이 발전하여 최고의 전성기를 맞이하게 될 것입니다.", img: "rare_base.png"},
-                {msg: "전도유망(前途有望): 당신의 앞날에 밝은 미래와 무한한 가능성이 펼쳐져 있습니다.", img: "rare_base.png"},
-                {msg: "화룡점정(畵龍點睛): 마지막 중요한 일을 성공적으로 마쳐 완벽한 성과를 이룹니다.", img: "rare_base.png"}
+            rare: [ // 10% - 사자성어 포함 고품격 운세
+                "만사형통(萬事亨通):\n행정 업무 제로, 수업에만 전념하는 한 해!",
+                "금상첨화(錦上添花):\n역대급 천사 아이들만 만나는 기적!",
+                "고진감래(苦盡甘來):\n지난해 고생 끝, 올해는 꽃길만 걷는 1년!",
+                "화룡점정(畵龍點睛):\n모든 수업 아이디어가 대박 터지는 해!",
+                "일취월장(日就月將):\n선생님의 전문성이 빛을 발하는 2026년!",
+                "승승장구(乘勝長驅):\n승진, 연구, 상장까지 모두 휩쓰는 기운!",
+                "무사태평(無事泰平):\n학급 사고 제로, 평안한 365일 보장!",
+                "천생연분(天生緣分):\n동료 선생님들과 찰떡궁합, 최고의 팀워크!",
+                "운수대통(運數大通):\n생각지 못한 예산과 교구가 쏟아지는 해!",
+                "명불허전(名不虛傳):\n학부모님들 사이에서 갓선생님으로 등극!"
             ],
-            medium: [ // 중간 (25%) - 20개
-                {msg: "선생님의 따뜻한 말 한마디가 아이들에게는 큰 힘이 됩니다.", img: "medium_base.png"},
-                {msg: "올해는 행정 업무가 술술 풀려 칼퇴 요정이 찾아올 거예요!", img: "medium_base.png"},
-                {msg: "우리 반 아이들과 환상의 호흡을 자랑하는 꿀케미 학급이 될 것입니다.", img: "medium_base.png"},
-                {msg: "동료 선생님들과의 끈끈한 팀워크로 학교생활이 더욱 즐거워집니다.", img: "medium_base.png"},
-                {msg: "수업 준비? 걱정 마세요! 아이디어가 샘솟는 한 해가 될 거예요.", img: "medium_base.png"},
-                {msg: "학부모님들과의 소통이 원활하여 신뢰받는 선생님이 되실 겁니다.", img: "medium_base.png"},
-                {msg: "예기치 않은 보너스나 포상이 기다리고 있을지도 몰라요!", img: "medium_base.png"},
-                {msg: "건강 관리에 조금만 신경 쓰면 일 년 내내 활력이 넘칠 거예요.", img: "medium_base.png"},
-                {msg: "새롭게 도전하는 연수나 프로젝트에서 좋은 성과를 얻게 됩니다.", img: "medium_base.png"},
-                {msg: "지친 일상 속에서 소소하지만 확실한 행복(소확행)을 자주 발견합니다.", img: "medium_base.png"},
-                {msg: "아이들의 초롱초롱한 눈빛에서 교사로서의 보람을 가득 느낄 것입니다.", img: "medium_base.png"},
-                {msg: "복잡했던 문제가 의외로 쉽게 해결되어 마음이 한결 가벼워집니다.", img: "medium_base.png"},
-                {msg: "주변 사람들에게 인정받고 칭찬받는 기분 좋은 일들이 생깁니다.", img: "medium_base.png"},
-                {msg: "긍정적인 에너지가 넘쳐 주변 사람들까지 기분 좋게 만듭니다.", img: "medium_base.png"},
-                {msg: "바쁜 와중에도 나만의 시간을 즐길 수 있는 여유가 생깁니다.", img: "medium_base.png"},
-                {msg: "계획했던 일들이 순조롭게 진행되어 성취감을 맛보게 됩니다.", img: "medium_base.png"},
-                {msg: "도움이 필요할 때 귀인이 나타나 손길을 내밀어 줄 것입니다.", img: "medium_base.png"},
-                {msg: "작은 노력으로 큰 기쁨을 얻는 가성비 최고의 한 해가 됩니다.", img: "medium_base.png"},
-                {msg: "마음의 평온을 찾고 스트레스를 잘 관리할 수 있게 됩니다.", img: "medium_base.png"},
-                {msg: "당신의 열정이 아이들에게 전해져 교실에 웃음꽃이 핍니다.", img: "medium_base.png"}
+            medium: [ // 25% - 학급 운영 및 업무 경감
+                "신학기 첫날부터\n아이들이 규칙을 척척 지킵니다.",
+                "올해는 퇴근 요정이 돕는 해,\n매일 칼퇴근이 현실이 됩니다.",
+                "복잡한 공문들이\n알아서 척척 해결되는 업무운!",
+                "수업 시간에 아이들의\n초롱초롱한 눈빛이 가득합니다.",
+                "나를 힘들게 하던 행정 업무가\n획기적으로 줄어듭니다.",
+                "학부모 상담마다\n감사 인사가 쏟아지는 행복!",
+                "교실에 햇살만 가득,\n빌런 없는 평온한 학급 운영.",
+                "창의적 체험활동 아이디어가\n매일 밤 샘솟습니다.",
+                "동료 교사들과의 커피 한 잔이\n가장 큰 힐링이 되는 해.",
+                "급식 메뉴가 매일\n선생님의 최애 메뉴로 구성됩니다.",
+                "수업 나눔 시간에\n최고의 찬사를 받는 전문성!",
+                "공개 수업이 떨림 없이\n완벽하게 마무리됩니다.",
+                "체육 대회와 현장 학습마다\n날씨 요정이 함께합니다.",
+                "교사 동아리 활동에서\n새로운 재능을 발견하게 됩니다.",
+                "올해는 연수마다\n인생 강의를 만나는 지혜의 해.",
+                "아이들의 일기 속에\n선생님 사랑이 가득 담깁니다.",
+                "교실 환경 미화가\n단숨에 끝나는 손재주의 축복.",
+                "학기 말 생기부 작성이\n빛의 속도로 끝납니다.",
+                "신학기 준비가\n스트레스 없이 즐겁게 마무리됩니다.",
+                "선생님의 건강이 최고,\n일 년 내내 활기가 넘칩니다."
             ],
-            common: [ // 일반 (65%) - 30개
-                {msg: "올 한 해, 큰 사고 없이 안전하고 무탈하게 지나갈 것입니다.", img: "common_base.png"},
-                {msg: "매일매일 반복되는 일상이지만 그 속에서 작은 기쁨을 발견하세요.", img: "common_base.png"},
-                {msg: "가끔은 지칠 때도 있겠지만, 당신은 충분히 잘하고 있습니다!", img: "common_base.png"},
-                {msg: "동료 선생님과 나누는 커피 한 잔의 여유가 활력소가 됩니다.", img: "common_base.png"},
-                {msg: "아이들의 엉뚱하고 순수한 모습에 웃음 짓는 날이 많을 거예요.", img: "common_base.png"},
-                {msg: "오늘 하루도 무사히 마친 당신, 정말 수고 많으셨습니다!", img: "common_base.png"},
-                {msg: "주말에는 모든 걸 잊고 푹 쉬며 재충전하는 시간을 가지세요.", img: "common_base.png"},
-                {msg: "급식 메뉴에 좋아하는 반찬이 나오는 소소한 행운이 따릅니다.", img: "common_base.png"},
-                {msg: "출퇴근길, 우연히 마주친 풍경에서 작은 위로를 받게 됩니다.", img: "common_base.png"},
-                {msg: "가끔은 나 자신을 위한 작은 선물을 준비해 보는 건 어떨까요?", img: "common_base.png"},
-                {msg: "오늘 할 일을 내일로 미루지 않는다면 마음이 훨씬 편안해질 거예요.", img: "common_base.png"},
-                {msg: "따뜻한 물 한 잔, 가벼운 스트레칭으로 건강을 챙겨보세요.", img: "common_base.png"},
-                {msg: "스쳐 지나가는 인연 속에서도 배울 점을 발견하게 됩니다.", img: "common_base.png"},
-                {msg: "당신의 묵묵한 노력이 언젠가는 빛을 발할 날이 올 것입니다.", img: "common_base.png"},
-                {msg: "힘들 땐 혼자 고민하지 말고 주변에 도움을 청해보세요.", img: "common_base.png"},
-                {msg: "작은 실수에 너무 연연하지 마세요. 누구나 그럴 수 있으니까요.", img: "common_base.png"},
-                {msg: "오늘 점심은 동료들과 맛있는 것을 먹으며 기분 전환을 해보세요.", img: "common_base.png"},
-                {msg: "가끔은 하늘을 올려다보는 여유를 가져보는 것도 좋습니다.", img: "common_base.png"},
-                {msg: "당신의 존재만으로도 누군가에게는 큰 힘이 된다는 걸 잊지 마세요.", img: "common_base.png"},
-                {msg: "기분 좋은 인사는 당신과 상대방 모두의 하루를 밝게 만듭니다.", img: "common_base.png"},
-                {msg: "가방 속에 잊고 있던 비상금을 발견하는 기쁨이 있을지도!", img: "common_base.png"},
-                {msg: "예상치 못한 곳에서 옛 친구나 반가운 사람 소식을 듣게 됩니다.", img: "common_base.png"},
-                {msg: "나를 힘들게 했던 고민거리가 시간이 지나면서 자연스레 해결됩니다.", img: "common_base.png"},
-                {msg: "당신의 따뜻한 배려가 돌고 돌아 결국 당신에게로 돌아옵니다.", img: "common_base.png"},
-                {msg: "평범한 일상 속에서 감사할 제목들을 하나씩 찾아보세요.", img: "common_base.png"},
-                {msg: "조급해하지 말고 천천히, 당신만의 속도로 나아가면 됩니다.", img: "common_base.png"},
-                {msg: "오늘 하루도 당신의 자리에서 최선을 다한 당신, 멋집니다!", img: "common_base.png"},
-                {msg: "가벼운 산책이나 운동으로 몸과 마음의 건강을 챙겨보세요.", img: "common_base.png"},
-                {msg: "당신의 밝은 미소가 주변을 환하게 밝히는 등불이 됩니다.", img: "common_base.png"},
-                {msg: "올해도 변함없이 아이들 곁을 지키는 당신을 응원합니다!", img: "common_base.png"}
+            common: [ // 65% - 안전 및 소소한 공감
+                "안전한 1년:\n교실 내 안전사고가 절대 없습니다.",
+                "커피 한 잔의 여유가\n보장되는 평화로운 아침.",
+                "아이들이 선생님의 진심을\n알아주는 따뜻한 날들.",
+                "교내 복사기가\n오늘따라 고장 없이 잘 돌아갑니다.",
+                "출근길 신호등이\n연속 초록불인 소소한 행운.",
+                "점심 급식 반찬이\n풍족하게 남는 넉넉한 하루.",
+                "복도에서 만나는 아이들마다\n밝게 인사해 주는 기쁨.",
+                "수업 종이 치기 전에\n모든 준비가 끝나는 여유.",
+                "단톡방 알림이 조용한\n평화로운 저녁 시간.",
+                "생기부 오타를\n제출 직전에 발견하는 천운!",
+                "예상치 못한 간식 선물이\n책상 위에 놓여있습니다.",
+                "아이들이 서로 배려하며\n다툼 없는 교실 분위기.",
+                "교실 화분이\n일 년 내내 푸르게 자라는 생명력.",
+                "학급 비품 신청이\n한 번에 통과되는 행정운.",
+                "퇴근 후 만나는\n노을이 유난히 예쁜 하루.",
+                "아이들의 웃음소리가\n음악처럼 들리는 교실.",
+                "신학기 교실 배정이\n가장 명당으로 당첨!",
+                "업무 수첩에 체크표시가\n빠르게 늘어나는 생산성.",
+                "동학년 선생님들과의\n수다가 스트레스를 날려줍니다.",
+                "학부모님의 응원 문자 한 통에\n피로가 싹 가십니다.",
+                "수업 보조 자료가\n찰떡같이 준비되는 날.",
+                "아이들이 스스로 교실을\n정리 정돈하는 기특함.",
+                "회의가 예상보다\n30분 일찍 끝나는 축복.",
+                "선생님의 목 상태가\n일 년 내내 쌩쌩한 해.",
+                "비 오는 날 창가에서\n아이들과 읽는 동화책의 낭만.",
+                "교무실 내 자리가\n가장 아늑하고 편안합니다.",
+                "학급 문고에 좋은 책들이\n선물로 들어오는 운.",
+                "아이들의 성장이\n눈에 띄게 보이는 보람찬 해.",
+                "선생님의 미소가\n아이들에게 가장 큰 교육이 됩니다.",
+                "오늘 하루도 무사히,\n수고한 나를 위한 따뜻한 위로."
             ]
         };
 
         function getWeightedFortune() {
             const random = Math.random();
-            let selectedCategory;
-            if (random < 0.1) selectedCategory = fortunes.rare;      // 10%
-            else if (random < 0.35) selectedCategory = fortunes.medium; // 25%
-            else selectedCategory = fortunes.common;                 // 65%
+            let selectedCategory, categoryKey;
+            if (random < 0.1) { selectedCategory = fortunes.rare; categoryKey = 'rare_base.png'; }
+            else if (random < 0.35) { selectedCategory = fortunes.medium; categoryKey = 'medium_base.png'; }
+            else { selectedCategory = fortunes.common; categoryKey = 'common_base.png'; }
             
-            // 선택된 카테고리 내에서 랜덤한 운세 객체 하나를 반환
-            return selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+            const msg = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+            return { msg, img: categoryKey };
         }
 
         function createStars() {
@@ -234,39 +229,23 @@
         };
 
         window.saveGreeting = async () => {
-            if(localStorage.getItem('registered_2026')) {
-                return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
-            }
-
+            if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
             const getVal = (id) => document.getElementById(id).value.trim();
             const data = {
                 nickname: getVal('nickname'), password: getVal('password'), message: getVal('message'),
                 region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone'),
                 likes: 0, createdAt: new Date()
             };
-            const agree = document.getElementById('agree').checked;
+            if(!data.nickname || !data.message || !data.password || !data.region || !data.school || !data.realName || !data.phone) return alert("⚠️ 당첨자 정보를 포함한 모든 항목을 입력해 주세요!");
+            if(!document.getElementById('agree').checked) return alert("⚠️ 개인정보 수집 동의가 필요합니다!");
 
-            if(!data.nickname || !data.password || !data.message || !data.region || !data.school || !data.realName || !data.phone) {
-                return alert("⚠️ 이벤트 참여를 위해 모든 항목을 입력해 주세요! 빈칸이 있으면 등불을 띄울 수 없습니다.");
-            }
-            if(!agree) {
-                return alert("⚠️ 개인정보 수집 및 이용에 동의해 주셔야 이벤트 참여가 가능합니다.");
-            }
-
-            try {
-                await addDoc(colRef, data);
-                localStorage.setItem('registered_2026', 'true');
-                
-                // 🎰 확률에 따라 운세(메시지+이미지) 선택
-                const selectedFortune = getWeightedFortune();
-                document.getElementById('charm-message').innerText = selectedFortune.msg;
-                // 선택된 이미지 파일명으로 src 속성 변경
-                document.getElementById('charm-bg-img').src = selectedFortune.img;
-                
-                document.getElementById('charm-modal').style.display = 'flex';
-            } catch (e) {
-                alert("서버 연결에 실패했습니다. 네트워크 상태를 확인해 주세요.");
-            }
+            await addDoc(colRef, data);
+            localStorage.setItem('registered_2026', 'true');
+            
+            const selected = getWeightedFortune();
+            document.getElementById('charm-message').innerText = selected.msg;
+            document.getElementById('charm-bg-img').src = selected.img; // 등급별 이미지 적용
+            document.getElementById('charm-modal').style.display = 'flex';
         };
 
         onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
@@ -277,10 +256,9 @@
             snapshot.forEach((docSnap) => {
                 const item = docSnap.data();
                 const id = docSnap.id;
-                // 🛠️ TOP 배지 위치 수정: 카드 안쪽 우측 상단(삭제 버튼 옆)으로 이동
                 const cardHtml = `
                     <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg relative">
-                        ${count < 10 ? `<span class="absolute top-2 right-12 bg-[#d4af37] text-white text-[10px] px-2 py-1 rounded-full font-bold shadow-sm z-10">TOP ${count+1}</span>` : ''}
+                        ${count < 10 ? `<span class="top-badge">TOP ${count+1}</span>` : ''}
                         <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold z-30">✕</button>
                         <div>
                             <p class="text-[10px] text-[#c0392b] font-bold mb-1">@${item.nickname}</p>
@@ -308,15 +286,11 @@
         window.deletePost = async (id, correctPw) => {
             const pw = prompt("삭제 비밀번호를 입력해 주세요.");
             if (pw === String(correctPw) || pw === "admin2026") {
-                if (confirm("정말로 이 등불을 끄시겠습니까?\n삭제 후 즉시 다시 참여하실 수 있습니다.")) {
-                    try {
-                        await deleteDoc(doc(db, "greetings", id));
-                        localStorage.removeItem('registered_2026');
-                        alert("삭제되었습니다. 이제 다시 등록하실 수 있습니다! 😊");
-                        location.reload();
-                    } catch (e) {
-                        alert("오류가 발생했습니다.");
-                    }
+                if (confirm("정말로 이 등불을 끄시겠습니까?")) {
+                    await deleteDoc(doc(db, "greetings", id));
+                    localStorage.removeItem('registered_2026');
+                    alert("삭제되었습니다.");
+                    location.reload();
                 }
             } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
         };
@@ -345,7 +319,7 @@
             const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = "event_participants.csv";
+            link.download = "event_data.csv";
             link.click();
         };
     </script>
