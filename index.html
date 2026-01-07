@@ -2,301 +2,147 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 선생님 덕담 등불 띄우기 🏮</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026 아트봉봉스쿨 학급운세 이벤트 🏮</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: "Pretendard", sans-serif; overflow-x: hidden; min-height: 100vh; transition: background 1s ease; }
-        .day-theme { background: radial-gradient(circle at top, #fff5f5 0%, #fffaf0 100%); color: #2d3436; }
-        .night-theme { background: radial-gradient(circle at top, #1a1a2e 0%, #0f0f1a 100%); color: #f8f9fa; }
-        .star { position: fixed; background: white; border-radius: 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; }
-        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
+        body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #fff5f5 0%, #fffaf0 100%); color: #2d3436; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+        .hidden { display: none !important; }
         
-        /* 카드 및 배지 디자인 */
-        .gold-container { border: 2.5px solid #d4af37; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); position: relative; z-index: 20; }
-        .card { transition: all 0.3s ease; border-radius: 20px; background: white; color: #333; height: 180px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .honor-card { border: 3px solid #d4af37; background: #fffcf0; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
-        .regular-card { border-top: 5px solid #c0392b; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        /* 퀴즈 카드 디자인 */
+        .quiz-card { background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2.5px solid #d4af37; width: 100%; max-width: 400px; }
         
-        /* 🛠️ TOP 배지: 우측 상단 (닉네임 보호) */
-        .top-badge { position: absolute; top: 12px; right: 45px; background: #d4af37; color: white; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 800; z-index: 30; }
+        /* 모달 버튼 스타일 (큼직한 사이즈) */
+        .btn-option { width: 100%; padding: 18px; border: 2px solid #eee; border-radius: 18px; text-align: left; font-weight: 700; font-size: 1.05rem; transition: all 0.2s; margin-bottom: 12px; line-height: 1.4; }
+        .btn-option:active { transform: scale(0.98); border-color: #c0392b; background: #fff5f5; }
 
-        #charm-modal { display: none; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; position: fixed; inset: 0; }
-        .charm-container { width: 340px; background: white; border-radius: 30px; padding: 20px; text-align: center; }
-        #charm-capture { width: 300px; position: relative; margin: 0 auto 20px; border-radius: 15px; overflow: hidden; background-color: #fff; }
-        #charm-bg-img { width: 100%; height: auto; display: block; }
-        
-        /* 🛠️ 운세 텍스트: 정중앙 정렬 및 가독성 최적화 */
-        .charm-text { 
-            position: absolute; top: 46%; left: 50%; transform: translate(-50%, -50%); 
-            width: 82%; text-align: center; color: #4a3318; font-weight: 600; 
-            font-size: 0.95rem; line-height: 1.6; word-break: keep-all; pointer-events: none;
-            white-space: pre-wrap;
-        }
+        /* 상태바 (Progress Bar) */
+        .progress-container { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        #progress-bar { width: 33%; height: 100%; background: #c0392b; transition: width 0.3s ease; }
 
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        /* 플로팅 배너 */
+        .floating-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(192, 57, 43, 0.95); color: white; padding: 15px; text-align: center; font-size: 0.85rem; font-weight: 700; z-index: 50; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); backdrop-filter: blur(5px); }
+
+        /* 결과 이미지 영역 */
+        #charm-capture { width: 100%; max-width: 320px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+        #fortune-img { width: 100%; height: auto; display: block; }
     </style>
 </head>
-<body class="day-theme">
-    <div id="star-container"></div>
+<body class="p-4 pb-24 flex flex-col items-center">
 
-    <header class="text-center pt-8 pb-3 relative z-10">
-        <h1 class="text-xl md:text-3xl font-extrabold text-[#c0392b] mb-1 flex justify-center items-center gap-2" id="main-title">
-            <span>🏮</span> 2026 선생님 덕담 등불 띄우기 <span>🏮</span>
-        </h1>
-        <p class="text-xs md:text-sm text-[#d4af37] font-semibold">신학기, 선생님의 앞날을 비추는 따뜻한 한마디</p>
-        <button onclick="window.shareLink()" class="mt-3 px-5 py-2 bg-white/80 border border-[#d4af37] text-[#c0392b] rounded-full text-[11px] font-bold shadow-md">🔗 이벤트 링크 복사하기</button>
+    <div class="floating-banner">
+        🎁 결과 이미지 공유 시 <b>네이버페이 1만원</b> 증정! (50명 추첨)
+    </div>
+
+    <header class="text-center py-6 mt-4">
+        <h1 class="text-2xl font-extrabold text-[#c0392b] mb-1">🏮 2026 학급운세 퀴즈 🏮</h1>
+        <p class="text-[13px] text-[#d4af37] font-bold">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
     </header>
 
-    <div class="max-w-md mx-auto gold-container bg-white/95 p-6 rounded-[35px] mb-12 mx-4 relative">
-        <div class="absolute -top-7 -left-7 text-5xl">🧧</div>
-        <div class="absolute -bottom-7 -right-7 text-5xl">✨</div>
-        <div class="flex gap-2 mb-2">
-            <input type="text" id="nickname" placeholder="닉네임" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
-            <input type="password" id="password" placeholder="비밀번호" class="w-1/2 p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none text-xs text-gray-800">
+    <section id="quiz-section" class="quiz-card p-7 mt-2">
+        <div class="progress-container">
+            <div id="progress-bar"></div>
         </div>
-        <textarea id="message" rows="2" placeholder="새해의 소망을 담은 덕담을 남겨주세요..." class="w-full p-3 bg-red-50/30 border border-red-100 rounded-xl outline-none mb-3 text-sm resize-none text-gray-800"></textarea>
         
-        <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-100 mb-4 text-gray-800">
-            <p class="text-[10px] font-bold text-amber-800 mb-2 text-center">🎁 이벤트 당첨자 정보 (전원 필수 입력)</p>
-            <div class="grid grid-cols-2 gap-2 mb-3">
-                <input type="text" id="region" placeholder="지역" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="school" placeholder="소속교" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="realName" placeholder="실명" class="p-2 border rounded-lg text-[11px] bg-white">
-                <input type="text" id="phone" placeholder="연락처" class="p-2 border rounded-lg text-[11px] bg-white">
+        <div id="quiz-content">
+            <div id="q1">
+                <p class="text-gray-400 text-xs font-bold mb-2">QUESTION 01</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug">선생님의 수업 부담을 줄여주고, 전과목 수업자료를 무료로 제공하는 2026 신학기 필수 에듀테크는?</h3>
+                <button class="btn-option" onclick="nextStep(1, 1)">(1) 아트봉봉스쿨</button>
+                <button class="btn-option" onclick="nextStep(1, 2)">(2) 병오년</button>
+                <button class="btn-option" onclick="nextStep(1, 3)">(3) 나이스</button>
             </div>
-            <div class="text-[9px] text-gray-500 bg-white/50 p-2 rounded-lg border leading-tight mb-3">
-                [개인정보 수집 안내] 수집처: 아이스크림아트 / 목적: 경품 발송 / 항목: 성명, 연락처, 지역, 소속교 / 기간: 목적 달성 후 즉시 파기
+            <div id="q2" class="hidden">
+                <p class="text-gray-400 text-xs font-bold mb-2">QUESTION 02</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug">에듀테크 "아트봉봉스쿨"은 26년 대한민국 교육박람회(코엑스)에서 체험할 수 있다 없다?</h3>
+                <button class="btn-option" onclick="nextStep(2, 1)">(1) 있다</button>
+                <button class="btn-option" onclick="nextStep(2, 2)">(2) 없다</button>
             </div>
-            <label class="flex items-center text-[10px] text-gray-600 cursor-pointer font-bold">
-                <input type="checkbox" id="agree" class="mr-2 w-4 h-4 accent-[#c0392b]"> 개인정보 수집 및 이용에 동의합니다.
-            </label>
-        </div>
-        <button onclick="window.saveGreeting()" class="w-full bg-[#c0392b] text-white py-3.5 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all">덕담 등불 올리기 ❤️</button>
-    </div>
-
-    <div class="max-w-6xl mx-auto px-4 mb-10 relative z-10">
-        <h2 class="text-[#d4af37] font-bold text-center mb-5 flex items-center justify-center gap-2">
-            <span>✨</span> 명예의 덕담 (TOP 10) <span>✨</span>
-        </h2>
-        <div id="honor-list" class="flex overflow-x-auto gap-5 pb-6 snap-x scrollbar-hide p-2"></div>
-    </div>
-
-    <div id="greeting-list" class="card-grid max-w-6xl mx-auto"></div>
-
-    <div id="charm-modal">
-        <div class="charm-container shadow-2xl">
-            <h3 class="text-xl font-bold text-[#c0392b] mb-4">나의 2026 행운 부적</h3>
-            <div id="charm-capture">
-                <img src="common_base.png" id="charm-bg-img" alt="부적 배경">
-                <p id="charm-message" class="charm-text"></p>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="window.downloadCharm()" class="flex-1 bg-[#d4af37] text-white py-4 rounded-2xl font-bold text-sm shadow-md">초고화질 저장</button>
-                <button onclick="window.closeModal()" class="flex-1 bg-gray-100 text-gray-500 py-4 rounded-2xl font-bold text-sm">닫기</button>
+            <div id="q3" class="hidden">
+                <p class="text-gray-400 text-xs font-bold mb-2">QUESTION 03</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug">아이스크림몰에서 아트봉봉스쿨 선생님들이 남겨주신 생생한 후기 수는 몇 개?</h3>
+                <button class="btn-option" onclick="nextStep(3, 1)">(1) 100개 이상</button>
+                <button class="btn-option" onclick="nextStep(3, 2)">(2) -1개</button>
+                <button class="btn-option" onclick="nextStep(3, 3)">(3) 0개</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="text-center py-16 opacity-30 hover:opacity-100 transition-opacity">
-        <button onclick="window.downloadCSV()" class="text-[10px] text-gray-400 underline mr-4">Admin Data Export</button>
-    </div>
+    <section id="result-section" class="text-center hidden w-full max-w-md">
+        <h3 class="text-xl font-extrabold text-[#c0392b] mb-4">✨ 선생님의 2026 학급운세 ✨</h3>
+        
+        <div id="charm-capture">
+            <img id="fortune-img" src="" alt="2026 학급운세">
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3 px-2">
+            <button onclick="window.downloadResult()" class="w-full bg-[#d4af37] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all">📸 운세 이미지 저장하기</button>
+            <button onclick="window.goGoogleForm()" class="w-full bg-[#c0392b] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all animate-bounce">🎁 공유하고 네이버페이 받기</button>
+            <button onclick="window.copyHashtag()" class="w-full bg-white border-2 border-[#eee] text-gray-500 py-3 rounded-xl font-bold text-sm">#아트봉봉스쿨 해시태그 복사</button>
+        </div>
+
+        <p class="mt-6 text-[10px] text-gray-400 leading-relaxed">
+            * 저장 버튼이 작동하지 않을 경우, 이미지를 <b>길게 눌러 저장</b>하거나 <b>화면을 캡처</b>해 주세요.<br>
+            * 인스타그램/블로그 공유 시 반드시 <b>#아트봉봉스쿨</b> 태그를 포함해야 응모됩니다.
+        </p>
+    </section>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA2cUrJBWa8DnZ10yTbSNkdVvHgNd5XkIc",
-            authDomain: "new-year-pj-94d18.firebaseapp.com",
-            projectId: "new-year-pj-94d18",
-            storageBucket: "new-year-pj-94d18.firebasestorage.app",
-            messagingSenderId: "100527886802",
-            appId: "1:100527886802:web:ad7c8f1f9298915b90780b",
-            measurementId: "G-VZY04YTW61"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const colRef = collection(db, "greetings");
-
-        // 🎰 운세 데이터 (희귀 5, 중간 15, 일반 20)
-        const fortunes = {
-            rare: [ // 10% - rare_base.png (편지봉투)
-                "만사형통(萬事亨通)의 기운이 깃듭니다!\n올해는 행정 업무 제로, 수업 아이디어 대박!\n선생님이 꿈꾸던 가장 이상적인 학급 운영이 현실이 됩니다. 모든 순간이 성장의 발판이 될 거예요.",
-                "고진감래(苦盡甘來), 지난 노력이 꽃을 피웁니다.\n힘들었던 경험은 밑거름이 되어, 올해는 천사 같은 아이들과 환상적인 케미를 자랑하게 됩니다. 선생님의 진심이 드디어 빛을 발합니다.",
-                "금상첨화(錦上添花), 기쁜 소식이 겹쳐 옵니다.\n학급 분위기는 역대 최고, 여기에 생각지 못한 포상이나 예산 지원까지! 선생님의 교직 생활 중 가장 행복한 한 해가 약속되어 있습니다.",
-                "일취월장(日就月將), 전문성이 폭발하는 해!\n새로운 연수나 연구 활동에서 최고의 성과를 거두며, 동료들에게 귀감이 되는 '갓선생님'으로 거듭납니다. 선생님의 가치가 증명되는 해가 될 거예요.",
-                "전도유망(前途有望), 밝은 미래가 열립니다.\n신학기 배정부터 학급 구성까지, 모든 운이 선생님 편입니다. 어떤 도전도 성공으로 이어지며, 일 년 내내 웃음 끊이지 않는 교실이 됩니다."
-            ],
-            medium: [ // 25% - medium_base.png (꽃무늬)
-                "올해는 '칼퇴 요정'이 선생님 곁을 지킵니다.\n공문 처리가 빛의 속도로 해결되고, 매일 저녁 온전한 휴식 시간이 보장되는 기적 같은 업무운이 따릅니다.",
-                "동료 선생님들과의 찰떡궁합 팀워크!\n마음 맞는 옆 반 선생님 덕분에 힘든 일도 웃으며 넘길 수 있습니다. 든든한 동료애 속에서 교직의 즐거움을 다시 발견합니다.",
-                "학부모님들의 깊은 신뢰와 지지.\n선생님의 교육 철학을 지지해주는 든든한 학부모님들 덕분에, 상담 시간이 기다려지는 마법 같은 소통의 운이 들어와 있습니다.",
-                "아이들의 눈빛이 초롱초롱하게 빛나는 해.\n설명 한마디에 집중하는 아이들의 모습에서 깊은 보람을 느낍니다. 수업의 재미와 교사의 긍지를 동시에 챙기게 될 거예요.",
-                "창의적 체험활동 아이디어 뱅크 등극!\n수업 시간마다 톡톡 튀는 활동으로 아이들을 사로잡습니다. 선생님의 수업 방식은 학교의 새로운 트렌드가 됩니다.",
-                "학급 비품과 예산이 넉넉히 확보됩니다.\n원하던 교구들이 척척 준비되어, 선생님이 꿈꾸던 예쁜 교실 공간을 완벽하게 꾸미게 되는 풍요로운 해입니다.",
-                "예기치 못한 보너스나 성과급의 행운!\n성실히 걸어온 길에 대한 따뜻한 보상이 찾아옵니다. 금전적인 여유와 함께 마음까지 넉넉해지는 기분 좋은 소식이 기다립니다.",
-                "공개 수업이 '인생 수업'이 되는 날.\n떨림은 설렘으로 바뀌고, 참관하시는 분들의 극찬 속에 마무리됩니다. 선생님의 역량이 자랑스럽게 빛나는 순간이 옵니다.",
-                "지친 일상 속 소소하지만 확실한 행복.\n급식 메뉴가 매일 최애 반찬으로 나오고, 주차 자리가 늘 명당인 소소한 행운들이 선생님의 일상을 즐겁게 채워줄 것입니다.",
-                "학기 말 생활기록부 작성이 수월해집니다.\n아이들의 장점이 눈에 쏙쏙 들어와 문장이 술술 써지는 마법! 밤샘 없는 평온한 마무리가 선생님을 기다리고 있습니다.",
-                "신학기 첫날, 아이들과의 기분 좋은 만남.\n선생님을 기다려온 아이들의 설레는 표정에서 에너지를 얻습니다. 첫 단추부터 완벽하게 끼워지는 신학기 운입니다.",
-                "교사 동아리나 취미 활동에서의 큰 즐거움.\n학교 밖 삶에서도 활력을 찾게 됩니다. 워라밸이 완벽하게 균형을 이루며 삶의 질이 한 단계 업그레이드됩니다.",
-                "나를 힘들게 하던 고질적인 문제가 해결됩니다.\n까다로웠던 업무나 관계의 실타래가 술술 풀려, 마음의 짐을 내려놓고 홀가분하게 지낼 수 있게 됩니다.",
-                "선생님의 건강이 최고조에 달하는 해.\n일 년 내내 잔병치레 없이 에너지가 넘칩니다. 규칙적인 생활과 긍정적인 마음가짐이 선생님을 활기차게 만듭니다.",
-                "아이들의 일기 속에 담긴 선생님 향한 진심.\n\"선생님이 우리 담임이라서 정말 좋아요\"라는 문구 한 줄에 모든 피로가 녹아내리는 감동적인 순간이 찾아올 것입니다."
-            ],
-            common: [ // 65% - common_base.png (말/장식)
-                "안전하고 평온한 교실 운영이 보장됩니다.\n사고 없는 365일, 아이들이 건강하게 생활하며 선생님의 마음도 평화로운 무사태평한 한 해가 약속되어 있습니다.",
-                "따뜻한 커피 한 잔의 여유가 있는 아침.\n출근 후 수업 시작 전, 온전히 나를 위한 짧은 휴식이 보장됩니다. 그 여유가 선생님의 하루를 온종일 지탱해 줄 거예요.",
-                "아이들의 순수한 미소에서 얻는 힐링.\n복도에서 마주칠 때마다 밝게 웃으며 인사하는 아이들 덕분에, 선생님의 입가에도 늘 미소가 떠나지 않을 것입니다.",
-                "오늘 하루도 무사히 마친 당신에게 박수를.\n큰 이벤트는 없어도 별 탈 없이 지나가는 평범한 하루가 쌓여 선생님의 가장 단단한 교직 경력이 됩니다.",
-                "퇴근길 마주하는 유난히 예쁜 노을.\n바쁜 업무를 마치고 나서는 길, 하늘이 주는 작은 선물에 위로받는 하루가 많아집니다. 자연이 주는 힐링을 누리세요.",
-                "아이들이 스스로 정리정돈하는 기특한 날.\n잔소리 없이도 교실이 깨끗하게 유지되는 소소한 기쁨! 선생님의 지도 방식이 아이들의 습관으로 자리 잡는 순간입니다.",
-                "비 오는 날 창가에서 아이들과 읽는 동화책.\n차분한 분위기 속에서 아이들과 공감대를 형성하는 낭만적인 시간들이 선생님의 정서를 채워줄 것입니다.",
-                "복사기가 고장 없이 척척 작동하는 행운.\n바쁜 아침, 선생님의 수고를 덜어주는 소소한 기계운까지 따르는 날들! 편안한 근무 환경이 조성됩니다.",
-                "내 책상 위에 몰래 놓인 아이의 사탕 한 알.\n서툰 글씨로 쓴 '사랑해요' 쪽지와 전달된 진심이 선생님의 교사로서의 존재 이유를 다시금 일깨워 줍니다.",
-                "점심 급식 메뉴가 유난히 맛있는 하루.\n좋아하는 메뉴가 가득한 식판을 마주하며 동료들과 즐거운 대화를 나누는 시간. 소박한 행복이 매일 이어집니다.",
-                "학급 비품이 분실 없이 잘 보존되는 해.\n물건 하나하나를 아껴 쓰는 아이들의 모습에서 교육의 결실을 봅니다. 스트레스 없는 비품 관리가 가능해집니다.",
-                "수업 종이 치기 전 완벽하게 끝나는 판서.\n시간 배분이 척척 맞아떨어지는 완벽한 강의운! 선생님의 수업 리듬이 아이들의 배움과 조화를 이룹니다.",
-                "단톡방 알림이 조용한 평화로운 저녁.\n퇴근 후에는 온전히 선생님만의 시간입니다. 불필요한 연락 없이 휴식에만 집중할 수 있는 퇴근 후의 평화가 지켜집니다.",
-                "계획했던 진도가 차질 없이 진행됩니다.\n예상치 못한 행사로 수업이 빠지는 일 없이, 차근차근 교육과정을 완수하며 느끼는 성취감이 자신감을 높여줍니다.",
-                "아이들이 서로 배려하며 다툼 없는 교실.\n중재할 일 없이 아이들끼리 해결하는 성숙한 모습. 선생님의 인성 교육이 아이들의 삶에 녹아들어 평화로운 공동체를 만듭니다.",
-                "오늘따라 신호등이 연속 초록불인 출근길.\n하루의 시작부터 운이 따르는 기분 좋은 징조들. 이런 작은 행운들이 모여 선생님의 2026년은 거대한 행복이 될 것입니다.",
-                "선생님의 목 상태가 일 년 내내 쌩쌩합니다.\n무리가 갈 법한 날에도 목소리가 잘 나와 수업이 즐거워집니다. 선생님의 목소리가 아이들에게 가장 아름다운 음악이 됩니다.",
-                "생기부 오타를 제출 직전에 발견하는 천운.\n큰 실수를 막아주는 예리한 관찰력과 운이 함께합니다. 완벽한 마무리로 신뢰받는 교사의 품격을 유지하게 될 것입니다.",
-                "아이들의 웃음소리가 음악처럼 들리는 오후.\n교실 가득 퍼지는 건강한 웃음소리가 지친 마음을 어루만져 줍니다. 아이들의 행복이 곧 선생님의 행복이 되는 해입니다.",
-                "오늘 하루도 당신의 자리에서 최선을 다했습니다.\n눈에 띄는 성과가 없어도 당신은 이미 충분히 훌륭한 교사입니다. 스스로를 토닥여주세요. 당신은 아이들의 영웅입니다."
-            ]
-        };
-
-        // 🛠️ 전역 함수 할당 (버튼 작동 보장)
-        window.saveGreeting = async () => {
-            if(localStorage.getItem('registered_2026')) return alert("이미 소중한 덕담을 남겨주셨습니다! 😊");
-
-            const getVal = (id) => document.getElementById(id).value.trim();
-            const data = {
-                nickname: getVal('nickname'), password: getVal('password'), message: getVal('message'),
-                region: getVal('region'), school: getVal('school'), realName: getVal('realName'), phone: getVal('phone')
-            };
-            const agree = document.getElementById('agree').checked;
-
-            if(!data.nickname || !data.password || !data.message || !data.region || !data.school || !data.realName || !data.phone) {
-                return alert("⚠️ 모든 항목을 입력해야 등불을 띄울 수 있습니다!");
+        // 퀴즈 로직 (정답은 무조건 1번)
+        window.nextStep = (current, answer) => {
+            if (answer !== 1) {
+                return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 😊");
             }
-            if(!agree) return alert("⚠️ 개인정보 수집 안내에 동의해 주세요!");
+            
+            const progressBar = document.getElementById('progress-bar');
+            document.getElementById(`q${current}`).classList.add('hidden');
 
-            try {
-                await addDoc(colRef, { ...data, likes: 0, createdAt: new Date() });
-                localStorage.setItem('registered_2026', 'true');
-
-                // 확률 기반 운세 결정 (희귀:편지봉투, 중간:꽃무늬, 일반:말/장식)
-                const random = Math.random();
-                let selected, img;
-                if (random < 0.1) { selected = fortunes.rare; img = 'rare_base.png'; }
-                else if (random < 0.35) { selected = fortunes.medium; img = 'medium_base.png'; }
-                else { selected = fortunes.common; img = 'common_base.png'; }
-                
-                document.getElementById('charm-message').innerText = selected[Math.floor(Math.random() * selected.length)];
-                document.getElementById('charm-bg-img').src = img;
-                document.getElementById('charm-modal').style.display = 'flex';
-            } catch (e) { alert("연결 오류가 발생했습니다."); }
+            if (current < 3) {
+                document.getElementById(`q${current + 1}`).classList.remove('hidden');
+                progressBar.style.width = (current + 1) * 33.3 + '%';
+            } else {
+                showResult();
+            }
         };
 
-        window.shareLink = () => {
-            navigator.clipboard.writeText(window.location.href).then(() => alert("이벤트 링크가 복사되었습니다! ❤️"));
-        };
+        // 결과 노출 함수 (랜덤 이미지 연동)
+        function showResult() {
+            const randomNum = Math.floor(Math.random() * 50) + 1; // 1~50 랜덤
+            document.getElementById('fortune-img').src = `fortune_${randomNum}.png`;
+            
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('result-section').classList.remove('hidden');
+        }
 
-        window.deletePost = async (id, correctPw) => {
-            const pw = prompt("비밀번호를 입력해 주세요.");
-            if (pw === String(correctPw) || pw === "admin2026") {
-                if (confirm("정말로 이 등불을 끄시겠습니까?")) {
-                    await deleteDoc(doc(db, "greetings", id));
-                    localStorage.removeItem('registered_2026');
-                    alert("삭제되었습니다. 다시 참여하실 수 있습니다! 😊");
-                    location.reload();
-                }
-            } else if (pw !== null) alert("비밀번호가 일치하지 않습니다.");
-        };
-
-        window.downloadCharm = () => {
+        // 이미지 저장 (html2canvas)
+        window.downloadResult = () => {
             const target = document.querySelector("#charm-capture");
-            html2canvas(target, { scale: 4, useCORS: true, backgroundColor: null }).then(canvas => {
+            html2canvas(target, { 
+                scale: 3, 
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `2026_행운부적_${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png', 1.0);
+                link.download = `2026_학급운세_아트봉봉스쿨.png`;
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         };
 
-        window.closeModal = () => { location.reload(); };
-
-        // 데이터 리스트 렌더링
-        onSnapshot(query(colRef, orderBy("likes", "desc"), orderBy("createdAt", "desc")), (snapshot) => {
-            const hList = document.getElementById('honor-list');
-            const gList = document.getElementById('greeting-list');
-            hList.innerHTML = ''; gList.innerHTML = '';
-            let count = 0;
-            snapshot.forEach((docSnap) => {
-                const item = docSnap.data();
-                const id = docSnap.id;
-                const cardHtml = `
-                    <div id="card-${id}" class="card ${count < 10 ? 'honor-card snap-center min-w-[260px]' : 'regular-card'} p-5 shadow-lg">
-                        ${count < 10 ? `<span class="top-badge">TOP ${count+1}</span>` : ''}
-                        <button onclick="window.deletePost('${id}', '${item.password}')" class="absolute top-3 right-4 text-gray-300 hover:text-red-500 font-bold z-30">✕</button>
-                        <div>
-                            <p class="text-[10px] text-[#c0392b] font-bold mb-1">@${item.nickname}</p>
-                            <p class="text-gray-800 text-[14px] leading-relaxed font-medium line-clamp-3">${item.message}</p>
-                        </div>
-                        <div class="flex justify-between items-center border-t pt-3 mt-2">
-                            <button onclick="window.likePost('${id}')" class="text-red-500 font-bold text-xs hover:scale-110 transition-transform">❤️ <span>${item.likes}</span></button>
-                            <span class="text-[9px] text-gray-400 font-light">${new Date(item.createdAt.seconds * 1000).toLocaleDateString()}</span>
-                        </div>
-                    </div>`;
-                if(count < 10) hList.innerHTML += cardHtml; else gList.innerHTML += cardHtml;
-                count++;
+        // 해시태그 복사
+        window.copyHashtag = () => {
+            navigator.clipboard.writeText("#아트봉봉스쿨").then(() => {
+                alert("해시태그가 복사되었습니다! 게시물에 붙여넣어 주세요. ✨");
             });
-        });
-
-        window.likePost = async (id) => {
-            if(localStorage.getItem('voted_2026_'+id)) return alert("이미 응원해주신 덕담입니다! ❤️");
-            const card = document.getElementById('card-' + id);
-            card.classList.add('like-animation');
-            await updateDoc(doc(db, "greetings", id), { likes: increment(1) });
-            localStorage.setItem('voted_2026_'+id, true);
-            setTimeout(() => card.classList.remove('like-animation'), 500);
         };
 
-        window.downloadCSV = async () => {
-            const pw = prompt("Admin?"); if (pw !== "admin2026") return;
-            const snap = await getDocs(colRef);
-            let csv = "\uFEFF닉네임,메세지,지역,학교,실명,연락처,좋아요,날짜\n";
-            snap.forEach(d => {
-                const v = d.data();
-                csv += `"${v.nickname}","${v.message}","${v.region}","${v.school}","${v.realName}","${v.phone}",${v.likes},"${new Date(v.createdAt.seconds*1000).toLocaleString()}"\n`;
-            });
-            const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "event_data.csv";
-            link.click();
+        // 구글폼 이동 (URL 플레이스홀더)
+        window.goGoogleForm = () => {
+            const googleFormUrl = "https://구글폼주소를여기에넣으세요"; // 👈 나중에 실제 주소로 변경하세요!
+            window.open(googleFormUrl, '_blank');
         };
-
-        // 별 생성 및 테마
-        const container = document.getElementById('star-container');
-        for (let i = 0; i < 40; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = Math.random() * 2 + 1 + 'px';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * -100 + 'vh';
-            star.style.animationDuration = Math.random() * 10 + 5 + 's';
-            container.appendChild(star);
-        }
     </script>
 </body>
 </html>
-
