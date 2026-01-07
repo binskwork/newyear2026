@@ -117,13 +117,21 @@
         }
 
         // 이미지 저장 (html2canvas)
-        window.downloadResult = () => {
+       window.downloadResult = () => {
             const target = document.querySelector("#charm-capture");
+            const originalBorderRadius = target.style.borderRadius; // 기존 스타일 임시 저장
+
+            // 1. 캡처 직전, 모서리 라운딩을 직각(0px)으로 변경
+            target.style.borderRadius = '0px';
+
             html2canvas(target, { 
-                scale: 3, 
-                useCORS: true,
-                logging: false
+                scale: 3,        // 고화질 설정
+                useCORS: true,   // 크로스 도메인 이미지 허용
+                logging: false   // 불필요한 로그 비활성화
             }).then(canvas => {
+                // 2. 캡처 완료 후, 원래 둥근 스타일로 복구 (사용자 화면에는 영향 없음)
+                target.style.borderRadius = originalBorderRadius;
+
                 const link = document.createElement('a');
                 link.download = `2026_학급운세_아트봉봉스쿨.png`;
                 link.href = canvas.toDataURL('image/png');
@@ -146,3 +154,4 @@
     </script>
 </body>
 </html>
+
