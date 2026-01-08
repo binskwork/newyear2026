@@ -8,45 +8,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* 전체 테마: 트렌디한 블루/스카이톤 그라데이션 */
         body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #e0f7fa 0%, #b2ebf2 100%); color: #01579b; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
         .hidden { display: none !important; }
-        
-        /* 퀴즈 카드 디자인: 파란색 테두리와 그림자 */
         .quiz-card { background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(2, 136, 209, 0.1); border: 2.5px solid #4fc3f7; width: 100%; max-width: 400px; }
-        
-        /* 모달 버튼 스타일 (큼직한 사이즈, 블루톤) */
         .btn-option { width: 100%; padding: 18px; border: 2px solid #b3e5fc; border-radius: 18px; text-align: left; font-weight: 700; font-size: 1.05rem; transition: all 0.2s; margin-bottom: 12px; line-height: 1.4; color: #0277bd; }
         .btn-option:active { transform: scale(0.98); border-color: #0288d1; background: #e1f5fe; }
-
-        /* 상태바 (Progress Bar): 파란색 */
         .progress-container { width: 100%; height: 8px; background: #e1f5fe; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
         #progress-bar { width: 33%; height: 100%; background: #0288d1; transition: width 0.3s ease; }
-
-        /* 플로팅 배너: 진한 파란색 배경 */
         .floating-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2, 119, 189, 0.95); color: white; padding: 15px; text-align: center; font-size: 0.85rem; font-weight: 700; z-index: 50; box-shadow: 0 -5px 15px rgba(2, 136, 209, 0.2); backdrop-filter: blur(5px); }
-
-        /* 결과 이미지 영역 */
         #charm-capture { width: 100%; max-width: 320px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(2, 136, 209, 0.2); }
         #fortune-img { width: 100%; height: auto; display: block; }
     </style>
 </head>
-<body class="p-4 pb-32 flex flex-col items-center">
+<body class="pt-2 px-4 pb-32 flex flex-col items-center">
 
     <div class="floating-banner">
-        🎁 결과 이미지 공유 시 <b>네이버페이 1만원</b> 증정! (선착순 100명)
+        🎁 나의 운세 이미지 공유 시 <b>네이버페이 1만원</b> 증정! (선착순 100명)
     </div>
 
-    <header class="text-center py-4 mt-2 tracking-tight">
-        <h1 class="text-2xl font-extrabold text-[#0288d1] mb-0 leading-tight">💙 2026 교실 필수템<br>아트봉봉스쿨 💙</h1>
-        <p class="text-xs text-[#03a9f4] font-bold mt-1">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
+    <header class="text-center pt-2 pb-2 mt-0 tracking-tight">
+        <div class="text-2xl font-extrabold text-[#0288d1] mb-0">💙 2026 💙</div>
+        <h1 class="text-xl font-extrabold text-[#0288d1] mb-0 leading-tight">신학기 필수템 아트봉봉스쿨</h1>
+        <p class="text-[11px] text-[#03a9f4] font-bold mt-1">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
     </header>
 
     <section id="quiz-section" class="quiz-card p-7 mt-4">
         <div class="progress-container">
             <div id="progress-bar"></div>
         </div>
-        
         <div id="quiz-content">
             <div id="q1">
                 <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 01</p>
@@ -73,32 +62,23 @@
 
     <section id="result-section" class="text-center hidden w-full max-w-md mt-4 mb-8">
         <h3 class="text-xl font-extrabold text-[#0288d1] mb-4 tracking-tight">✨ 선생님의 2026 학급운세 ✨</h3>
-        
         <div id="charm-capture" class="mb-6">
             <img id="fortune-img" src="" alt="2026 학급운세">
         </div>
-
         <div class="flex flex-col gap-3 px-2">
             <div class="w-full bg-[#e1f5fe] text-[#0277bd] py-3 rounded-2xl font-bold text-sm border-2 border-[#b3e5fc] pointer-events-none">
                 👆 이미지를 길게 눌러 저장하거나<br>화면을 캡쳐해 공유하세요.
             </div>
-            
             <button onclick="window.goGoogleForm()" class="w-full bg-[#0288d1] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all animate-bounce">🎁 공유하고 네이버페이 받기</button>
             <button onclick="window.copyHashtag()" class="w-full bg-white border-2 border-[#b3e5fc] text-[#0277bd] py-3 rounded-xl font-bold text-sm">#아트봉봉스쿨 해시태그 복사</button>
         </div>
     </section>
 
     <script type="module">
-        // 퀴즈 로직 (정답은 무조건 1번)
         window.nextStep = (current, answer) => {
-            if (answer !== 1) {
-                // 오답 알림창도 파란색 테마에 맞춰 수정 고려 가능 (기본 alert 사용)
-                return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 💙");
-            }
-            
+            if (answer !== 1) return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 💙");
             const progressBar = document.getElementById('progress-bar');
             document.getElementById(`q${current}`).classList.add('hidden');
-
             if (current < 3) {
                 document.getElementById(`q${current + 1}`).classList.remove('hidden');
                 progressBar.style.width = (current + 1) * 33.3 + '%';
@@ -107,29 +87,20 @@
             }
         };
 
-        // 결과 노출 함수 (랜덤 이미지 연동)
         function showResult() {
-            const randomNum = Math.floor(Math.random() * 50) + 1; // 1~50 랜덤
+            const randomNum = Math.floor(Math.random() * 50) + 1;
             document.getElementById('fortune-img').src = `fortune_${randomNum}.png`;
-            
             document.getElementById('quiz-section').classList.add('hidden');
             document.getElementById('result-section').classList.remove('hidden');
-            // 결과 화면이 길어질 수 있으므로 상단으로 스크롤 이동
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 이미지 저장 함수는 더 이상 사용하지 않으므로 제거했습니다.
-
-        // 해시태그 복사
         window.copyHashtag = () => {
-            navigator.clipboard.writeText("#아트봉봉스쿨").then(() => {
-                alert("해시태그가 복사되었습니다! 게시물에 붙여넣어 주세요. ✨");
-            });
+            navigator.clipboard.writeText("#아트봉봉스쿨").then(() => alert("해시태그가 복사되었습니다! ✨"));
         };
 
-        // 구글폼 이동 (URL 플레이스홀더)
         window.goGoogleForm = () => {
-            const googleFormUrl = "https://구글폼주소를여기에넣으세요"; // 👈 나중에 실제 주소로 변경하세요!
+            const googleFormUrl = "https://구글폼주소를여기에넣으세요";
             window.open(googleFormUrl, '_blank');
         };
     </script>
