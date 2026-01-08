@@ -3,66 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 아트봉봉스쿨 학급운세 이벤트 🏮</title>
+    <title>2026 아트봉봉스쿨 학급운세 이벤트 💙</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #fff5f5 0%, #fffaf0 100%); color: #2d3436; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+        /* 전체 테마: 트렌디한 블루/스카이톤 그라데이션 */
+        body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #e0f7fa 0%, #b2ebf2 100%); color: #01579b; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
         .hidden { display: none !important; }
         
-        /* 퀴즈 카드 디자인 */
-        .quiz-card { background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2.5px solid #d4af37; width: 100%; max-width: 400px; }
+        /* 퀴즈 카드 디자인: 파란색 테두리와 그림자 */
+        .quiz-card { background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(2, 136, 209, 0.1); border: 2.5px solid #4fc3f7; width: 100%; max-width: 400px; }
         
-        /* 모달 버튼 스타일 (큼직한 사이즈) */
-        .btn-option { width: 100%; padding: 18px; border: 2px solid #eee; border-radius: 18px; text-align: left; font-weight: 700; font-size: 1.05rem; transition: all 0.2s; margin-bottom: 12px; line-height: 1.4; }
-        .btn-option:active { transform: scale(0.98); border-color: #c0392b; background: #fff5f5; }
+        /* 모달 버튼 스타일 (큼직한 사이즈, 블루톤) */
+        .btn-option { width: 100%; padding: 18px; border: 2px solid #b3e5fc; border-radius: 18px; text-align: left; font-weight: 700; font-size: 1.05rem; transition: all 0.2s; margin-bottom: 12px; line-height: 1.4; color: #0277bd; }
+        .btn-option:active { transform: scale(0.98); border-color: #0288d1; background: #e1f5fe; }
 
-        /* 상태바 (Progress Bar) */
-        .progress-container { width: 100%; height: 8px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        #progress-bar { width: 33%; height: 100%; background: #c0392b; transition: width 0.3s ease; }
+        /* 상태바 (Progress Bar): 파란색 */
+        .progress-container { width: 100%; height: 8px; background: #e1f5fe; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        #progress-bar { width: 33%; height: 100%; background: #0288d1; transition: width 0.3s ease; }
 
-        /* 플로팅 배너 */
-        .floating-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(192, 57, 43, 0.95); color: white; padding: 15px; text-align: center; font-size: 0.85rem; font-weight: 700; z-index: 50; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); backdrop-filter: blur(5px); }
+        /* 플로팅 배너: 진한 파란색 배경 */
+        .floating-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2, 119, 189, 0.95); color: white; padding: 15px; text-align: center; font-size: 0.85rem; font-weight: 700; z-index: 50; box-shadow: 0 -5px 15px rgba(2, 136, 209, 0.2); backdrop-filter: blur(5px); }
 
         /* 결과 이미지 영역 */
-        #charm-capture { width: 100%; max-width: 320px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+        #charm-capture { width: 100%; max-width: 320px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(2, 136, 209, 0.2); }
         #fortune-img { width: 100%; height: auto; display: block; }
     </style>
 </head>
-<body class="p-4 pb-24 flex flex-col items-center">
+<body class="p-4 pb-32 flex flex-col items-center">
 
     <div class="floating-banner">
-        🎁 결과 이미지 공유 시 <b>네이버페이 1만원</b> 증정! (50명 추첨)
+        🎁 결과 이미지 공유 시 <b>네이버페이 1만원</b> 증정! (선착순 100명)
     </div>
 
-    <header class="text-center py-6 mt-4">
-        <h1 class="text-2xl font-extrabold text-[#c0392b] mb-1">🏮 2026 학급운세 퀴즈 🏮</h1>
-        <p class="text-[13px] text-[#d4af37] font-bold">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
+    <header class="text-center py-4 mt-2 tracking-tight">
+        <h1 class="text-2xl font-extrabold text-[#0288d1] mb-0 leading-tight">💙 2026 교실 필수템<br>아트봉봉스쿨 💙</h1>
+        <p class="text-xs text-[#03a9f4] font-bold mt-1">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
     </header>
 
-    <section id="quiz-section" class="quiz-card p-7 mt-2">
+    <section id="quiz-section" class="quiz-card p-7 mt-4">
         <div class="progress-container">
             <div id="progress-bar"></div>
         </div>
         
         <div id="quiz-content">
             <div id="q1">
-                <p class="text-gray-400 text-xs font-bold mb-2">QUESTION 01</p>
-                <h3 class="text-[17px] font-bold mb-6 leading-snug">선생님의 수업 부담을 줄여주고, 전과목 수업자료를 무료로 제공하는 2026 신학기 필수 에듀테크는?</h3>
+                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 01</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">선생님의 수업 부담을 줄여주고, 전과목 수업자료를 무료로 제공하는 2026 신학기 필수 에듀테크는?</h3>
                 <button class="btn-option" onclick="nextStep(1, 1)">(1) 아트봉봉스쿨</button>
                 <button class="btn-option" onclick="nextStep(1, 2)">(2) 병오년</button>
                 <button class="btn-option" onclick="nextStep(1, 3)">(3) 나이스</button>
             </div>
             <div id="q2" class="hidden">
-                <p class="text-gray-400 text-xs font-bold mb-2">QUESTION 02</p>
-                <h3 class="text-[17px] font-bold mb-6 leading-snug">에듀테크 "아트봉봉스쿨"은 26년 대한민국 교육박람회(코엑스)에서 체험할 수 있다 없다?</h3>
+                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 02</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">에듀테크 "아트봉봉스쿨"은 26년 대한민국 교육박람회(코엑스)에서 체험할 수 있다 없다?</h3>
                 <button class="btn-option" onclick="nextStep(2, 1)">(1) 있다</button>
                 <button class="btn-option" onclick="nextStep(2, 2)">(2) 없다</button>
             </div>
             <div id="q3" class="hidden">
-                <p class="text-gray-400 text-xs font-bold mb-2">QUESTION 03</p>
-                <h3 class="text-[17px] font-bold mb-6 leading-snug">아이스크림몰에서 아트봉봉스쿨 선생님들이 남겨주신 생생한 후기 수는 몇 개?</h3>
+                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 03</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">아이스크림몰에서 아트봉봉스쿨 선생님들이 남겨주신 생생한 후기 수는 몇 개?</h3>
                 <button class="btn-option" onclick="nextStep(3, 1)">(1) 100개 이상</button>
                 <button class="btn-option" onclick="nextStep(3, 2)">(2) -1개</button>
                 <button class="btn-option" onclick="nextStep(3, 3)">(3) 0개</button>
@@ -70,30 +71,29 @@
         </div>
     </section>
 
-    <section id="result-section" class="text-center hidden w-full max-w-md">
-        <h3 class="text-xl font-extrabold text-[#c0392b] mb-4">✨ 선생님의 2026 학급운세 ✨</h3>
+    <section id="result-section" class="text-center hidden w-full max-w-md mt-4 mb-8">
+        <h3 class="text-xl font-extrabold text-[#0288d1] mb-4 tracking-tight">✨ 선생님의 2026 학급운세 ✨</h3>
         
-        <div id="charm-capture">
+        <div id="charm-capture" class="mb-6">
             <img id="fortune-img" src="" alt="2026 학급운세">
         </div>
 
-        <div class="mt-6 flex flex-col gap-3 px-2">
-            <button onclick="window.downloadResult()" class="w-full bg-[#d4af37] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all">📸 운세 이미지 저장하기</button>
-            <button onclick="window.goGoogleForm()" class="w-full bg-[#c0392b] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all animate-bounce">🎁 공유하고 네이버페이 받기</button>
-            <button onclick="window.copyHashtag()" class="w-full bg-white border-2 border-[#eee] text-gray-500 py-3 rounded-xl font-bold text-sm">#아트봉봉스쿨 해시태그 복사</button>
+        <div class="flex flex-col gap-3 px-2">
+            <div class="w-full bg-[#e1f5fe] text-[#0277bd] py-3 rounded-2xl font-bold text-sm border-2 border-[#b3e5fc] pointer-events-none">
+                👆 이미지를 길게 눌러 저장하거나<br>화면을 캡쳐해 공유하세요.
+            </div>
+            
+            <button onclick="window.goGoogleForm()" class="w-full bg-[#0288d1] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all animate-bounce">🎁 공유하고 네이버페이 받기</button>
+            <button onclick="window.copyHashtag()" class="w-full bg-white border-2 border-[#b3e5fc] text-[#0277bd] py-3 rounded-xl font-bold text-sm">#아트봉봉스쿨 해시태그 복사</button>
         </div>
-
-        <p class="mt-6 text-[10px] text-gray-400 leading-relaxed">
-            * 저장 버튼이 작동하지 않을 경우, 이미지를 <b>길게 눌러 저장</b>하거나 <b>화면을 캡처</b>해 주세요.<br>
-            * 인스타그램/블로그 공유 시 반드시 <b>#아트봉봉스쿨</b> 태그를 포함해야 응모됩니다.
-        </p>
     </section>
 
     <script type="module">
         // 퀴즈 로직 (정답은 무조건 1번)
         window.nextStep = (current, answer) => {
             if (answer !== 1) {
-                return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 😊");
+                // 오답 알림창도 파란색 테마에 맞춰 수정 고려 가능 (기본 alert 사용)
+                return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 💙");
             }
             
             const progressBar = document.getElementById('progress-bar');
@@ -114,30 +114,11 @@
             
             document.getElementById('quiz-section').classList.add('hidden');
             document.getElementById('result-section').classList.remove('hidden');
+            // 결과 화면이 길어질 수 있으므로 상단으로 스크롤 이동
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 이미지 저장 (html2canvas)
-       window.downloadResult = () => {
-            const target = document.querySelector("#charm-capture");
-            const originalBorderRadius = target.style.borderRadius; // 기존 스타일 임시 저장
-
-            // 1. 캡처 직전, 모서리 라운딩을 직각(0px)으로 변경
-            target.style.borderRadius = '0px';
-
-            html2canvas(target, { 
-                scale: 3,        // 고화질 설정
-                useCORS: true,   // 크로스 도메인 이미지 허용
-                logging: false   // 불필요한 로그 비활성화
-            }).then(canvas => {
-                // 2. 캡처 완료 후, 원래 둥근 스타일로 복구 (사용자 화면에는 영향 없음)
-                target.style.borderRadius = originalBorderRadius;
-
-                const link = document.createElement('a');
-                link.download = `2026_학급운세_아트봉봉스쿨.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        };
+        // 이미지 저장 함수는 더 이상 사용하지 않으므로 제거했습니다.
 
         // 해시태그 복사
         window.copyHashtag = () => {
@@ -154,4 +135,3 @@
     </script>
 </body>
 </html>
-
