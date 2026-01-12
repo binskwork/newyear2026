@@ -1,114 +1,128 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 아트봉봉스쿨 학급운세 이벤트 💙</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #e0f7fa 0%, #b2ebf2 100%); color: #01579b; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
-        .hidden { display: none !important; }
-        .quiz-card { background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(2, 136, 209, 0.1); border: 2.5px solid #4fc3f7; width: 100%; max-width: 400px; }
-        .btn-option { width: 100%; padding: 18px; border: 2px solid #b3e5fc; border-radius: 18px; text-align: left; font-weight: 700; font-size: 0.90rem; transition: all 0.2s; margin-bottom: 12px; line-height: 1.4; color: #0277bd; }
-        .btn-option:active { transform: scale(0.98); border-color: #0288d1; background: #e1f5fe; }
-        .progress-container { width: 100%; height: 8px; background: #e1f5fe; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
-        #progress-bar { width: 33%; height: 100%; background: #0288d1; transition: width 0.3s ease; }
-        .floating-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2, 119, 189, 0.95); color: white; padding: 15px; text-align: center; font-size: 0.85rem; font-weight: 700; z-index: 50; box-shadow: 0 -5px 15px rgba(2, 136, 209, 0.2); backdrop-filter: blur(5px); }
-        #charm-capture { width: 100%; max-width: 320px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(2, 136, 209, 0.2); }
-        #fortune-img { width: 100%; height: auto; display: block; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026 아트봉봉스쿨 학급운세 이벤트 💙</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #e0f7fa 0%, #b2ebf2 100%); color: #01579b; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+        .hidden { display: none !important; }
+        .quiz-card { background: white; border-radius: 30px; box-shadow: 0 10px 30px rgba(2, 136, 209, 0.1); border: 2.5px solid #4fc3f7; width: 100%; max-width: 400px; }
+        .btn-option { width: 100%; padding: 18px; border: 2px solid #b3e5fc; border-radius: 18px; text-align: left; font-weight: 700; font-size: 0.90rem; transition: all 0.2s; margin-bottom: 12px; line-height: 1.4; color: #0277bd; }
+        .btn-option:active { transform: scale(0.98); border-color: #0288d1; background: #e1f5fe; }
+        .progress-container { width: 100%; height: 8px; background: #e1f5fe; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+        #progress-bar { width: 33%; height: 100%; background: #0288d1; transition: width 0.3s ease; }
+        .floating-banner { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(2, 119, 189, 0.95); color: white; padding: 15px; text-align: center; font-size: 0.85rem; font-weight: 700; z-index: 50; box-shadow: 0 -5px 15px rgba(2, 136, 209, 0.2); backdrop-filter: blur(5px); }
+        #charm-capture { width: 100%; max-width: 320px; margin: 0 auto; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(2, 136, 209, 0.2); }
+        #fortune-img { width: 100%; height: auto; display: block; }
+    </style>
 </head>
 <body class="pt-2 px-4 pb-32 flex flex-col items-center">
 
-    <div class="floating-banner">
-        🎁 운세 공유 하고 <b>네이버페이 1만원</b> 받기 (100명 추첨)
-    </div>
+    <div class="floating-banner">
+        🎁 운세 공유 하고 <b>네이버페이 1만원</b> 받기 (100명 추첨)
+    </div>
 
-    <header class="text-center pt-2 pb-2 mt-0 tracking-tight">
-        <div class="text-2xl font-extrabold text-[#0288d1] mb-0">💙 2026 💙</div>
-        <h1 class="text-xl font-extrabold text-[#0288d1] mb-0 leading-tight">신학기 필수템 아트봉봉스쿨</h1>
-        <p class="text-[11px] text-[#03a9f4] font-bold mt-1">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
-    </header>
+    <header class="text-center pt-2 pb-2 mt-0 tracking-tight">
+        <div class="text-2xl font-extrabold text-[#0288d1] mb-0">💙 2026 💙</div>
+        <h1 class="text-xl font-extrabold text-[#0288d1] mb-0 leading-tight">신학기 필수템 아트봉봉스쿨</h1>
+        <p class="text-[11px] text-[#03a9f4] font-bold mt-1">브랜드 퀴즈 풀고 1년 운세를 확인하세요!</p>
+    </header>
 
-    <section id="quiz-section" class="quiz-card p-7 mt-4">
-        <div class="progress-container">
-            <div id="progress-bar"></div>
-        </div>
-        <div id="quiz-content">
-            <div id="q1">
-                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 01</p>
-                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">바쁜 3월, 복사기와 준비물에서 완전히 해방되는 2026 신학기 필수 에듀테크는?</h3>
-                <button class="btn-option" onclick="nextStep(1, 1)">(1) 신학기 필수템 아트봉봉스쿨💙</button>
-                <button class="btn-option" onclick="nextStep(1, 2)">(2) 병오년</button>
-                <button class="btn-option" onclick="nextStep(1, 3)">(3) 나이스</button>
-            </div>
-            <div id="q2" class="hidden">
-                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 02</p>
-                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">신학기 필수 에듀테크 "아트봉봉스쿨"은 26년 대한민국 교육박람회(코엑스)에서 체험할 수 있다 없다?</h3>
-                <button class="btn-option" onclick="nextStep(2, 1)">(1) 있다💙</button>
-                <button class="btn-option" onclick="nextStep(2, 2)">(2) 없다</button>
-            </div>
-            <div id="q3" class="hidden">
-                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 03</p>
-                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">“이름표·자기소개·안전·바른말·학급세우기, 신학기 세팅 원클릭에 끝내는 선생님의 편리미엄은?”</h3>
-                <button class="btn-option" onclick="nextStep(3, 1)">(1) 3월 필수 에듀테크 아트봉봉스쿨💙</button>
-                <button class="btn-option" onclick="nextStep(3, 2)">(2) 연필</button>
-                <button class="btn-option" onclick="nextStep(3, 3)">(3) 지우개</button>
-            </div>
-        </div>
-    </section>
+    <section id="quiz-section" class="quiz-card p-7 mt-4">
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="quiz-content">
+            <div id="q1">
+                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 01</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">바쁜 3월, 복사기와 준비물에서 완전히 해방되는 2026 신학기 필수 에듀테크는?</h3>
+                <button class="btn-option" onclick="nextStep(1, 1)">(1) 신학기 필수템 아트봉봉스쿨💙</button>
+                <button class="btn-option" onclick="nextStep(1, 2)">(2) 병오년</button>
+                <button class="btn-option" onclick="nextStep(1, 3)">(3) 나이스</button>
+            </div>
+            <div id="q2" class="hidden">
+                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 02</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">신학기 필수 에듀테크 "아트봉봉스쿨"은 26년 대한민국 교육박람회(코엑스)에서 체험할 수 있다 없다?</h3>
+                <button class="btn-option" onclick="nextStep(2, 1)">(1) 있다💙</button>
+                <button class="btn-option" onclick="nextStep(2, 2)">(2) 없다</button>
+            </div>
+            <div id="q3" class="hidden">
+                <p class="text-[#4fc3f7] text-xs font-bold mb-2">QUESTION 03</p>
+                <h3 class="text-[17px] font-bold mb-6 leading-snug text-[#01579b]">“이름표·자기소개·안전·바른말·학급세우기, 신학기 세팅 원클릭에 끝내는 선생님의 편리미엄은?”</h3>
+                <button class="btn-option" onclick="nextStep(3, 1)">(1) 3월 필수 에듀테크 아트봉봉스쿨💙</button>
+                <button class="btn-option" onclick="nextStep(3, 2)">(2) 연필</button>
+                <button class="btn-option" onclick="nextStep(3, 3)">(3) 지우개</button>
+            </div>
+        </div>
+    </section>
 
-    <section id="result-section" class="text-center hidden w-full max-w-md mt-4 mb-8">
-        <h3 class="text-xl font-extrabold text-[#0288d1] mb-4 tracking-tight">✨ 선생님의 2026 학급운세 ✨</h3>
-        <div id="charm-capture" class="mb-6">
-            <img id="fortune-img" src="" alt="2026 학급운세">
-        </div>
-        <div class="flex flex-col gap-3 px-2">
-            <div class="w-full bg-[#e1f5fe] text-[#0277bd] py-3 rounded-2xl font-bold text-sm border-2 border-[#b3e5fc] pointer-events-none">
-                👆 이미지를 길게 눌러 저장하거나<br>화면을 캡쳐해 공유하세요.
+    <section id="result-section" class="text-center hidden w-full max-w-md mt-4 mb-8">
+        <h3 class="text-xl font-extrabold text-[#0288d1] mb-4 tracking-tight">✨ 선생님의 2026 학급운세 ✨</h3>
+        <div id="charm-capture" class="mb-6">
+            <img id="fortune-img" src="" alt="2026 학급운세">
+        </div>
+        <div class="flex flex-col gap-3 px-2">
+            <div class="w-full bg-[#e1f5fe] text-[#0277bd] py-3 rounded-2xl font-bold text-sm border-2 border-[#b3e5fc] pointer-events-none">
+                👆 이미지를 길게 눌러 저장하거나<br>화면을 캡쳐해 공유하세요.
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.goGoogleForm()" class="flex-grow bg-[#0288d1] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all animate-bounce text-lg">🎁 공유하고 네이버페이 받기</button>
+                <button onclick="window.resetQuiz()" class="flex-none bg-white border-2 border-[#b3e5fc] text-[#0277bd] px-4 rounded-2xl font-bold text-sm active:scale-95 transition-all flex items-center justify-center" aria-label="처음으로 돌아가기">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
             </div>
-            <button onclick="window.goGoogleForm()" class="w-full bg-[#0288d1] text-white py-4 rounded-2xl font-extrabold shadow-md active:scale-95 transition-all animate-bounce">🎁 공유하고 네이버페이 받기</button>
-            <button onclick="window.copyHashtag()" class="w-full bg-white border-2 border-[#b3e5fc] text-[#0277bd] py-3 rounded-xl font-bold text-sm">#아트봉봉스쿨 해시태그 복사</button>
-        </div>
-    </section>
+                        <button onclick="window.copyHashtag()" class="w-full bg-white border-2 border-[#b3e5fc] text-[#0277bd] py-3 rounded-xl font-bold text-sm">#아트봉봉스쿨 해시태그 복사</button>
+        </div>
+    </section>
 
-    <script type="module">
-        window.nextStep = (current, answer) => {
-            if (answer !== 1) return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 💙");
-            const progressBar = document.getElementById('progress-bar');
-            document.getElementById(`q${current}`).classList.add('hidden');
-            if (current < 3) {
-                document.getElementById(`q${current + 1}`).classList.remove('hidden');
-                progressBar.style.width = (current + 1) * 33.3 + '%';
-            } else {
-                showResult();
-            }
+    <script type="module">
+        window.nextStep = (current, answer) => {
+            if (answer !== 1) return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 💙");
+            const progressBar = document.getElementById('progress-bar');
+            document.getElementById(`q${current}`).classList.add('hidden');
+            if (current < 3) {
+                document.getElementById(`q${current + 1}`).classList.remove('hidden');
+                progressBar.style.width = (current + 1) * 33.3 + '%';
+            } else {
+                showResult();
+            }
+        };
+
+        function showResult() {
+            const randomNum = Math.floor(Math.random() * 50) + 1;
+            document.getElementById('fortune-img').src = `fortune_${randomNum}.png`;
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('result-section').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 수정된 부분 시작: resetQuiz 함수 추가
+        window.resetQuiz = () => {
+            document.getElementById('progress-bar').style.width = '33%';
+            ['q1', 'q2', 'q3'].forEach((id, index) => {
+                const el = document.getElementById(id);
+                index === 0 ? el.classList.remove('hidden') : el.classList.add('hidden');
+            });
+            document.getElementById('result-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            window.scrollTo({ top: 0 });
         };
+        // 수정된 부분 끝
 
-        function showResult() {
-            const randomNum = Math.floor(Math.random() * 50) + 1;
-            document.getElementById('fortune-img').src = `fortune_${randomNum}.png`;
-            document.getElementById('quiz-section').classList.add('hidden');
-            document.getElementById('result-section').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        window.copyHashtag = () => {
+            navigator.clipboard.writeText("#아트봉봉스쿨").then(() => alert("해시태그가 복사되었습니다! ✨"));
+        };
 
-        window.copyHashtag = () => {
-            navigator.clipboard.writeText("#아트봉봉스쿨").then(() => alert("해시태그가 복사되었습니다! ✨"));
-        };
-
-        window.goGoogleForm = () => {
-            const googleFormUrl = "https://bit.ly/4aUJZXm";
-            window.open(googleFormUrl, '_blank');
-        };
-    </script>
+        window.goGoogleForm = () => {
+            const googleFormUrl = "https://bit.ly/4aUJZXm";
+            window.open(googleFormUrl, '_blank');
+        };
+    </script>
 </body>
 </html>
-
-
-
-
-
-
