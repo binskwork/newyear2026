@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2026 아트봉봉스쿨 학급운세 이벤트 💙</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C1KKVTZTMS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C1KKVTZTMS');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { font-family: "Pretendard", sans-serif; background: radial-gradient(circle at top, #e0f7fa 0%, #b2ebf2 100%); color: #01579b; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
         .hidden { display: none !important; }
@@ -79,7 +87,7 @@
         </div>
     </section>
 
-    <script type="module">
+    <script>
         window.nextStep = (current, answer) => {
             if (answer !== 1) return alert("아쉽습니다! 정답은 (1)번입니다. 다시 한번 읽어보세요! 💙");
             const progressBar = document.getElementById('progress-bar');
@@ -93,6 +101,9 @@
         };
 
         function showResult() {
+            // 통계 전송: 결과 페이지 노출
+            gtag('event', 'view_fortune_result');
+
             const randomNum = Math.floor(Math.random() * 50) + 1;
             document.getElementById('fortune-img').src = `fortune_${randomNum}.png`;
             document.getElementById('quiz-section').classList.add('hidden');
@@ -100,8 +111,10 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 다시하기 기능 추가
         window.resetQuiz = () => {
+            // 통계 전송: 다시하기 버튼 클릭
+            gtag('event', 'click_retry_quiz');
+
             document.getElementById('progress-bar').style.width = '33%';
             document.getElementById('q1').classList.remove('hidden');
             document.getElementById('q2').classList.add('hidden');
@@ -112,12 +125,15 @@
         };
 
         window.copyHashtag = () => {
+            // 통계 전송: 해시태그 복사 클릭
+            gtag('event', 'click_copy_hashtag');
             navigator.clipboard.writeText("#아트봉봉스쿨").then(() => alert("해시태그가 복사되었습니다! ✨"));
         };
 
         window.goGoogleForm = () => {
-            const googleFormUrl = "https://bit.ly/4aUJZXm";
-            window.open(googleFormUrl, '_blank');
+            // 통계 전송: 응모 버튼 클릭
+            gtag('event', 'click_apply_event');
+            window.open("https://bit.ly/4aUJZXm", '_blank');
         };
     </script>
 </body>
